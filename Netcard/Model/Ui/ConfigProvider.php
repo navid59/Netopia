@@ -25,6 +25,10 @@ final class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => [
                 self::CODE => [
+                    'logo' => [
+                        'alt' => __('Short Alt text'),
+                        'src' => 'https://netopia-payments.com/core/assets/5993428bab/images/logo.png'
+                    ],
                     'transactionResults' => [
                         ClientMock::SUCCESS => __('Success'),
                         ClientMock::FAILURE => __('Fraud')

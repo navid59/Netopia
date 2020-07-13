@@ -10,7 +10,10 @@
                name="payment[method]"
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
-        <label class="label" data-bind="attr: {'for': getCode()}">
+        <label class="label" data-bind="attr: {'for': getCode()}" >
+            <span style="background-color:rgba(0,0,255,0.3);">
+                <img src="https://netopia-payments.com/core/assets/5993428bab/images/logo.svg" width="134" height="50" alt="Netopia Payment>"/>
+            </span>
             <span data-bind="text: getTitle()"></span>
         </label>
     </div>
@@ -25,9 +28,41 @@
             <!--/ko-->
         </div>
 
+        <hr>
+        <!-- Creadit Card Number - Start / NAVID -->
+        <b>Show Card Icon</b><br>
+<!--        <ul class="credit-card-types">-->
+<!--            &lt;!&ndash; ko foreach: {data: getCcAvailableTypes(), as: 'item'} &ndash;&gt;-->
+<!--            <li class="item" data-bind="css: {-->
+<!--                        _active: $parent.selectedCardType() == item,-->
+<!--                        _inactive: $parent.selectedCardType() != null && $parent.selectedCardType() != item-->
+<!--                    } ">-->
+<!--                &lt;!&ndash;ko if: $parent.getIcons(item) &ndash;&gt;-->
+<!--                <img data-bind="attr: {-->
+<!--                            'src': $parent.getIcons(item).url,-->
+<!--                            'width': $parent.getIcons(item).width,-->
+<!--                            'height': $parent.getIcons(item).height-->
+<!--                        }">-->
+<!--                &lt;!&ndash;/ko&ndash;&gt;-->
+<!--            </li>-->
+<!--            &lt;!&ndash;/ko&ndash;&gt;-->
+<!--        </ul>-->
+        <b>Show Cradit Card Info </b><br>
+        <div class="field number required">
+            <label data-bind="" class="label">
+                <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
+            </label>
+            <div class="control">
+                <div data-bind="" class="hosted-control"></div>
+                <div class="hosted-error"><!-- ko i18n: 'Please, enter valid Credit Card Number'--><!-- /ko --></div>
+            </div>
+        </div>
+        <hr>
+        <!-- Creadit Card - End / NAVID -->
+
         <div class="field required">
             <label data-bind="attr: {for: getCode() + '_transaction_result'}" class="label">
-                <span><!-- ko i18n: 'Transaction Result'--><!-- /ko --></span>
+                <span><!-- ko i18n: 'Transaction Result for test'--><!-- /ko --></span>
             </label>
 
             <div class="control">

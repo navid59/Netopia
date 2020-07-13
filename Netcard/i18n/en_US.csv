@@ -1,1 +1,5 @@
 "FRAUD_MSG_LIST","Fraud Messages"
+cc_type,"Credit Card Type NAVID"
+cc_number,"Credit Card Number"
+"Credit Card Number","Credit Card Number Navid"
+"Please, enter valid Credit Card Number","Please, enter valid Credit Card Number NAVID"
