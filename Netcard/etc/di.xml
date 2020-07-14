@@ -130,6 +130,7 @@
     </virtualType>
     <virtualType name="NetcardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
+<!--            <argument name="configInterface" xsi:type="object">Netopia\Netcard\Gateway\Config\Config</argument>-->
             <argument name="configInterface" xsi:type="object">NetcardConfig</argument>
         </arguments>
     </virtualType>
