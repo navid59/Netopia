@@ -25,6 +25,10 @@
                         <label>Title</label>
                         <config_path>payment/net_card/title</config_path>
                     </field>
+                    <field id="description" translate="label" type="textarea" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Description</label>
+                        <config_path>payment/net_card/description</config_path>
+                    </field>
                     <field id="payment_action" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Payment Action</label>
                         <source_model>Netopia\Netcard\Model\Adminhtml\Source\PaymentAction</source_model>
@@ -50,15 +54,14 @@
                 <group id="auth" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0"
                        translate="label">
                     <label>Netopia Authentication Configuration</label>
-                    <field id="merchant_gateway_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Merchant Gateway Key</label>
+                    <field id="signature" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Merchant Id / Signature</label>
                     </field>
-                    <field id="public_key" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="public_key" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Public Key</label>
                     </field>
-                    <field id="private_key" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="private_key" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Private Key</label>
-                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     </field>
                 </group>
                 <group id="country" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
