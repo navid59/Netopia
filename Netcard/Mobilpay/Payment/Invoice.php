@@ -1,4 +1,5 @@
 <?php
+namespace Netopia\Netcard\Mobilpay\Payment;
 /**
  * Class Mobilpay_Payment_Invoice
  * @copyright NETOPIA
