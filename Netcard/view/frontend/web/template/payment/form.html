@@ -26,7 +26,6 @@
             <!--/ko-->
         </div>
 
-        <!-- Creadit Card Number - Start / NAVID -->
         <hr>
         <div class="field required">
             <label data-bind="attr: {for: getCode() + '_transaction_result'}" class="label">
@@ -49,25 +48,25 @@
             </div>
         </div>
         <hr>
-        <!-- Creadit Card - End / NAVID -->
 
-        <div class="field required">
-            <label data-bind="attr: {for: getCode() + '_transaction_result'}" class="label">
-                <span><!-- ko i18n: 'Transaction Result for test'--><!-- /ko --></span>
-            </label>
+<!-- To test Result -->
+<!--        <div class="field required">-->
+<!--            <label data-bind="attr: {for: getCode() + '_transaction_result'}" class="label">-->
+<!--                <span>&lt;!&ndash; ko i18n: 'Transaction Result for test'&ndash;&gt;&lt;!&ndash; /ko &ndash;&gt;</span>-->
+<!--            </label>-->
 
-            <div class="control">
-                <select name="payment[transaction_result]"
-                        class="select"
-                        data-bind="
-                                  options: getTransactionResults(),
-                                  optionsValue: 'value',
-                                  optionsText: 'transaction_result',
-                                  optionsCaption: $t('Transaction Result'),
-                                  value: transactionResult">
-                </select>
-            </div>
-        </div>
+<!--            <div class="control">-->
+<!--                <select name="payment[transaction_result]"-->
+<!--                        class="select"-->
+<!--                        data-bind="-->
+<!--                                  options: getTransactionResults(),-->
+<!--                                  optionsValue: 'value',-->
+<!--                                  optionsText: 'transaction_result',-->
+<!--                                  optionsCaption: $t('Transaction Result'),-->
+<!--                                  value: transactionResult">-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <div class="actions-toolbar">
             <div class="primary">
