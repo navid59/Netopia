@@ -9,7 +9,7 @@
     <system>
         <section id="payment">
             <group id="net_card" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-                <comment><![CDATA[<div class="netcard-payment-logo"></div><div class="netcard-payment-text">Offer more ways to pay with Netopia platform. <br/>Lorem Ipsum este pur şi simplu o machetă pentru text a industriei tipografice. Lorem Ipsum a fost macheta standard a industriei încă din secolul al XVI-lea. <br/>
+                <comment><![CDATA[<div class="netcard-payment-logo"></div><div class="netcard-payment-text"><b>Netopia Payment (Sandbox)</b><br/>Lorem Ipsum este pur şi simplu o machetă pentru text a industriei tipografice. Lorem Ipsum a fost macheta standard a industriei încă din secolul al XVI-lea. <br/>
                 când un tipograf anonim a luat o planşetă de litere şi le-a amestecat pentru a crea o carte demonstrativă pentru literele respective.</div>]]></comment>
                 <fieldset_css>complex netcard-section</fieldset_css>
                 <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>

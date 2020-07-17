@@ -50,8 +50,12 @@ class AuthorizationRequest implements BuilderInterface
             'AMOUNT' => $order->getGrandTotalAmount(),
             'CURRENCY' => $order->getCurrencyCode(),
             'EMAIL' => $address->getEmail(),
+            'SIGNATURE' => $this->config->getValue(
+                'auth/signature',
+                $order->getStoreId()
+            ),
             'MERCHANT_KEY' => $this->config->getValue(
-                'merchant_gateway_key',
+                'auth/signature',
                 $order->getStoreId()
             )
         ];

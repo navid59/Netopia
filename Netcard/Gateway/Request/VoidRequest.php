@@ -53,8 +53,12 @@ class VoidRequest implements BuilderInterface
         return [
             'TXN_TYPE' => 'V',
             'TXN_ID' => $payment->getLastTransId(),
+            'SIGNATURE' => $this->config->getValue(
+                'auth/signature',
+                $order->getStoreId()
+            ),
             'MERCHANT_KEY' => $this->config->getValue(
-                'merchant_gateway_key',
+                'auth/signature',
                 $order->getStoreId()
             )
         ];
