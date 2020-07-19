@@ -9,7 +9,6 @@ use Netopia\Netcard\Model\Ui\ConfigProvider;
 
 class Netcard extends \Magento\Payment\Model\Method\AbstractMethod
 {
-
     /**
      * Payment code
      *
@@ -24,9 +23,7 @@ class Netcard extends \Magento\Payment\Model\Method\AbstractMethod
      */
     protected $_isOffline = true;
 
-
     public function getOrderPlaceRedirectUrl(){
-        return 'netcard/redirect';
+        return 'netopiapayment/payment/redirect';
     }
-
 }

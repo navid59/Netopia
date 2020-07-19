@@ -46,6 +46,10 @@ define(
                         'transaction_result': value
                     }
                 });
+            },
+
+            afterPlaceOrder: function () {
+                alert('Palce Order is Pushed');
             }
         });
     }
