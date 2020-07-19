@@ -6,17 +6,24 @@
 /*global define*/
 define(
     [
-        'Magento_Checkout/js/view/payment/default'
+        'ko',
+        'jquery',
+        'Magento_Checkout/js/view/payment/default',
+        'Netopia_Netcard/js/action/set-payment-method-action'
     ],
-    function (Component) {
+    function (ko, $, Component, setPaymentMethodAction) {
         'use strict';
 
         return Component.extend({
             defaults: {
+                redirectAfterPlaceOrder: true,
                 template: 'Netopia_Netcard/payment/form',
                 transactionResult: ''
             },
-
+            afterPlaceOrder: function () {
+                setPaymentMethodAction(this.messageContainer);
+                return false;
+            },
             initObservable: function () {
 
                 this._super()
@@ -46,10 +53,6 @@ define(
                         'transaction_result': value
                     }
                 });
-            },
-
-            afterPlaceOrder: function () {
-                alert('Palce Order is Pushed');
             }
         });
     }
