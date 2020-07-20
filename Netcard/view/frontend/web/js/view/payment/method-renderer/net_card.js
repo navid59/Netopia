@@ -16,11 +16,12 @@ define(
 
         return Component.extend({
             defaults: {
-                redirectAfterPlaceOrder: true,
+                redirectAfterPlaceOrder: false,
                 template: 'Netopia_Netcard/payment/form',
                 transactionResult: ''
             },
             afterPlaceOrder: function () {
+                // alert('Palce Order is Pushed');
                 setPaymentMethodAction(this.messageContainer);
                 return false;
             },

@@ -12,7 +12,8 @@ define(
     function ($, quote, urlBuilder, storage, errorProcessor, customer, fullScreenLoader) {
         'use strict';
         return function (messageContainer) {
-            $.mage.redirect(url); //My Url, regarding Route
+            // $.mage.redirect('http://www.mdir.eu'); //My Url, regarding Route
+            $.mage.redirect('../netopia/payment/redirect/quote/' + quote.getQuoteId()); //My Url, regarding Route
         };
     }
 );
