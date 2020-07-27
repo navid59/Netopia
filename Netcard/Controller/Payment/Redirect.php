@@ -1,31 +1,41 @@
 <?php
 namespace Netopia\Netcard\Controller\Payment;
 
-use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\App\Action\Action;
-use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\View\Result\PageFactory;
 
 class Redirect extends Action {
     /**
-     * @var JsonFactory
+     * @var PageFactory
+     */
+    private $pageFactory;
+
+    /**
+     * Index constructor.
+     * @param Context $context
+     * @param PageFactory $pageFactory
      */
 
-//    public function __construct(
-//        Context $context,
-//        JsonFactory $resultJsonFactory)
-//    {
-//        $this->resultFactory = $resultJsonFactory;
-//        parent::__construct($context);
-//    }
+    public function __construct(
+        Context $context,
+        PageFactory $pageFactory
+    )
+    {
+        parent::__construct($context);
+        $this->pageFactory = $pageFactory;
+    }
 
+    /**
+     * Execute action based on request and return result
+     *
+     * @return \Magento\Framework\Controller\ResultInterface|ResponseInterface
+     * @throws \Magento\Framework\Exception\NotFoundException
+     */
     public function execute()
     {
-        /** @var Json $jsonResult */
-        $jsonResult = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $jsonResult->setData([
-            'message' => 'Thiis is test of Redirect in Json'
-        ]);
-        return $jsonResult;
+        $page = $this->pageFactory->create();
+        return $page;
     }
 }

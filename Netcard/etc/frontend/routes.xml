@@ -7,7 +7,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
-        <route id="netopia_netcard" frontName="netopia">
+        <route id="netopia" frontName="netopia">
             <module name="Netopia_Netcard" />
         </route>
     </router>

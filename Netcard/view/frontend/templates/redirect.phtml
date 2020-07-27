@@ -1,0 +1,9 @@
+<?php /* @var Netopia\Netcard\Block\Redirect $block */ ?>
+<?php
+    $quote = $block->getQuote();
+    $formData = $block->getFormData();
+//    $paymentUrl = ($block->getConfigData('debug') == 1) ? 'http://sandboxsecure.mobilpay.ro' : 'https://secure.mobilpay.ro';
+    echo '<pre>';
+    var_dump($formData);
+    echo '</pre>';
+?>

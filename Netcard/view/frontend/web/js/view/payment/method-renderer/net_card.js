@@ -23,6 +23,7 @@ define(
             afterPlaceOrder: function () {
                 // alert('Palce Order is Pushed');
                 setPaymentMethodAction(this.messageContainer);
+                // console.log('Just Nothing after Order Place');
                 return false;
             },
             initObservable: function () {
