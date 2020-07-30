@@ -140,5 +140,7 @@
             <argument name="config" xsi:type="object">NetcardConfig</argument>
         </arguments>
     </type>
-
+    <preference for="\Netopia\Netcard\Block" type="Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard"></preference>
+    <preference for="\Netopia\Netcard\Block" type="Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice"></preference>
+    <preference for="\Netopia\Netcard\Block" type="Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress"></preference>
 </config>

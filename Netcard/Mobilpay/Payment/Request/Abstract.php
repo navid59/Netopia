@@ -116,7 +116,7 @@ abstract class Mobilpay_Payment_Request_Abstract
 		srand((double) microtime() * 1000000);
         $this->_requestIdentifier = md5(uniqid(rand()));
 
-        $this->_objRequestParams = new stdClass();
+        $this->_objRequestParams = new \stdClass();
 	}
 
 	abstract protected function _prepare();

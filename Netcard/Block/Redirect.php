@@ -5,21 +5,11 @@
  */
 namespace Netopia\Netcard\Block;
 use Magento\Framework\View\Element\Template;
-
-//use Magento\Framework\View\Element\Template\Context;
-//use Magento\Checkout\Model\Session;
-//use Magento\Framework\App\ResourceConnection;
-//use Magento\Sales\Model\Order;
-
-//use Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Abstract;
-//use Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Card;
+use Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard;
 //use Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Invoice;
 //use Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Address;
+use Magento\Framework\Module\Dir;
 
-//require_once __DIR__ . '/../Mobilpay/Payment/Request/Abstract.php';
-//require_once __DIR__ . '/../Mobilpay/Payment/Request/Card.php';
-//require_once __DIR__ . '/../Mobilpay/Payment/Invoice.php';
-//require_once __DIR__ . '/../Mobilpay/Payment/Address.php';
 /**
  * Class Redirect
  * To handel Redirect from Magento to Sandbox
@@ -32,26 +22,21 @@ class Redirect extends Template
     protected $_scopeConfig;
     protected $_orderFactory;
     protected $_resource;
+    protected $_moduleReader;
     Protected $quoteFactory;
 
-//    /**
-//     * @var \Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Abstract
-//     */
-//    Protected $mobilpayPaymentRequestAbstract;
-
-//    /**
-//     * @var \Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Card
-//     */
-//    Protected $paymentRequestCard;
-//
-//    /**
-//     * @var \Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Invoice
-//     */
-//    Protected $mobilpayPaymentInvoice;
-//    /**
-//     * @var \Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Addres
-//     */
-//    Protected $mobilpayPaymentAddress;
+    /**
+     * @var \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard
+     */
+    Protected $mobilpayPaymentRequestCard;
+    /**
+     * @var \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice
+     */
+    Protected $mobilpayPaymentInvoice;
+    /**
+     * @var \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress
+     */
+    Protected $mobilpayPaymentAddress;
 
     /**
      * Redirect constructor.
@@ -61,33 +46,32 @@ class Redirect extends Template
      * @param \Magento\Framework\App\ResourceConnection $resource
      * @param \Magento\Sales\Model\Order $orderFactory
      * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
-//     * @param Mobilpay_Payment_Request_Abstract $mobilpayPaymentRequestAbstract
-//     * @param Mobilpay_Payment_Request_Card $paymentRequestCard
-//     * @param Mobilpay_Payment_Invoice $mobilpayPaymentInvoice
-//     * @param Mobilpay_Payment_Address $mobilpayPaymentAddress
+     * @param \Magento\Framework\Module\Dir\Reader $reader
+     * @param \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard $mobilpayPaymentRequestCard
+     * @param \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice $mobilpayPaymentInvoice
+     * @param \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress $mobilpayPaymentAddress
      * @param array $data
      */
-
     public function __construct(
                                 \Magento\Framework\View\Element\Template\Context $context,
                                 \Magento\Checkout\Model\Session $session,
                                 \Magento\Framework\App\ResourceConnection $resource,
                                 \Magento\Sales\Model\Order $orderFactory,
                                 \Magento\Quote\Model\QuoteFactory $quoteFactory,
-//                                \Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Abstract $mobilpayPaymentRequestAbstract,
-//                                \Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Card $paymentRequestCard,
-//                                \Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Invoice $mobilpayPaymentInvoice,
-//                                \Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Address $mobilpayPaymentAddress,
+                                \Magento\Framework\Module\Dir\Reader $reader,
+                                \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard $mobilpayPaymentRequestCard,
+                                \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice $mobilpayPaymentInvoice,
+                                \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress $mobilpayPaymentAddress,
                                 array $data)
     {
         $this->_resource = $resource;
         $this->_checkoutSession = $session;
         $this->_orderFactory = $orderFactory;
         $this->quoteFactory = $quoteFactory;
-//        $this->mobilpayPaymentRequestAbstract = $mobilpayPaymentRequestAbstract;
-//        $this->paymentRequestCard = $paymentRequestCard;
-//        $this->mobilpayPaymentInvoice = $mobilpayPaymentInvoice;
-//        $this->mobilpayPaymentAddress = $mobilpayPaymentAddress;
+        $this->_moduleReader = $reader;
+        $this->mobilpayPaymentRequestCard = $mobilpayPaymentRequestCard;
+        $this->mobilpayPaymentInvoice = $mobilpayPaymentInvoice;
+        $this->mobilpayPaymentAddress = $mobilpayPaymentAddress;
         parent::__construct($context, $data);
     }
 
@@ -120,36 +104,33 @@ class Redirect extends Template
         }else {
             die('You are NOT LOGEDIN');
         }
-
-
-//        return $this->_orderFactory->load($orderId[0]['entity_id']);
-//        return $this->_orderFactory->load($orderId);
     }
 
 
     public function getFormData()
     {
         $e = null;
+        $moduleDirectory = $this->_moduleReader->getModuleDir(Dir::MODULE_ETC_DIR, 'Netopia_Netcard');
         $shipping = $this->getOrder()->getShippingAddress();
         $billing = $this->getOrder()->getBillingAddress();
         $order = $this->getOrder();
         $result = [];
-        echo '<pre>';
+//        echo '<pre>';
 //        return ($shipping = $this->getOrder()->getShippingAddress()->getId());
 //        return ($this->getOrder()->getBillingAddress()->getId());
-        return ($this->getOrder()->getId());
-        echo '</pre>';
+//        return ($this->getOrder()->getId());
+//        echo '</pre>';
         try {
-            return ('Until Here');
-//            $objPmReqCard = new Mobilpay_Payment_Request_Card();
-            $objPmReqCard = $this->paymentRequestCard;
-
+            $objPmReqCard = $this->mobilpayPaymentRequestCard;
             $objPmReqCard->signature = $this->getConfigData('auth/signature');
+
+            // Get Public Key filename
+            $x509FilePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR . "sandbox." . $objPmReqCard->signature . ".public.cer";
 
             $objPmReqCard->orderId = $this->getOrder()->getId();
             $objPmReqCard->returnUrl = $this->getUrl('netcard/success');
 
-//            $objPmReqCard->invoice = new Mobilpay_Payment_Invoice();
+            // Add invoice info to Obj
             $objPmReqCard->invoice = $this->mobilpayPaymentInvoice;
 
             $objPmReqCard->invoice->currency = $order->getBaseCurrencyCode();
@@ -157,7 +138,7 @@ class Redirect extends Template
             $cart_description = $this->getConfigData('api/description');
             if ($cart_description != '') $objPmReqCard->invoice->details = $cart_description;
 
-//            $billingAddress = new Mobilpay_Payment_Address();
+            // Add billing address info to Obj
             $billingAddress = $this->mobilpayPaymentAddress;
 
             $company = $billing->getCompany();
@@ -178,7 +159,8 @@ class Redirect extends Template
             $billingAddress->mobilePhone = $billing->getTelephone();
 
             $objPmReqCard->invoice->setBillingAddress($billingAddress);
-            $objPmReqCard->encrypt($this->getConfigData('auth/public_key'));
+//            $objPmReqCard->encrypt($this->getConfigData('auth/public_key'));
+            $objPmReqCard->encrypt($x509FilePath);
         } catch (\Exception $e) {
             $result['status'] = 0;
             $result['message'] = $e->getMessage();

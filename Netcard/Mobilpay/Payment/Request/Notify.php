@@ -1,5 +1,5 @@
 <?php
-
+namespace Netopia\Netcard\Mobilpay\Payment\Request;
 /**
  * mobilPay
  *
@@ -84,7 +84,7 @@ class Mobilpay_Payment_Request_Notify {
      * Constructor
      */
     function __construct() {
-        
+
     }
 
     /**
