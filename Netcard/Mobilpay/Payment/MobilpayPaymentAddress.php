@@ -70,10 +70,10 @@
             }
         }
 
-        public function createXmlElement (DOMDocument $xmlDoc, $nodeName)
+        public function createXmlElement (\DOMDocument $xmlDoc, $nodeName)
         {
 
-            if (! ($xmlDoc instanceof DOMDocument))
+            if (! ($xmlDoc instanceof \DOMDocument))
             {
                 throw new Exception('', self::ERROR_INVALID_PARAMETER);
             }

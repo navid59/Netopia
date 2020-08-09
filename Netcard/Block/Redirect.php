@@ -5,6 +5,7 @@
  */
 namespace Netopia\Netcard\Block;
 use Magento\Framework\View\Element\Template;
+use Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice;
 use Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard;
 //use Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Invoice;
 //use Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Address;
@@ -88,21 +89,13 @@ class Redirect extends Template
         /** @var \Magento\Framework\App\Http\Context $context */
         $context = $obm->get('Magento\Framework\App\Http\Context');
 
-//        /** @var bool $isLoggedIn */
-//        $isLoggedIn = $context->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);
-//        if ($isLoggedIn) {
-//            $orderId = $connection->fetchAll('SELECT entity_id FROM `'.$tblSalesOrder.'` WHERE quote_id='.$connection->quote($quoteId));
-//        }
-//        else {
-//            $orderId = $connection->fetchAll('SELECT `'.$tblSalesOrder.'`.entity_id FROM `'.$tblSalesOrder.'` INNER JOIN `'.$tblQuoteIdMask.'` ON `'.$tblSalesOrder.'`.quote_id=`'.$tblQuoteIdMask.'`.quote_id AND `'.$tblQuoteIdMask.'`.masked_id='.$connection->quote($quoteId));
-//        }
-
+        // check AUth before Payment
         /** @var bool $isLoggedIn */
         $isLoggedIn = $context->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);
         if ($isLoggedIn) {
             return $this->quoteFactory->create()->load($quoteId);
         }else {
-            die('You are NOT LOGEDIN');
+            Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('customer/account'));
         }
     }
 
@@ -115,11 +108,7 @@ class Redirect extends Template
         $billing = $this->getOrder()->getBillingAddress();
         $order = $this->getOrder();
         $result = [];
-//        echo '<pre>';
-//        return ($shipping = $this->getOrder()->getShippingAddress()->getId());
-//        return ($this->getOrder()->getBillingAddress()->getId());
-//        return ($this->getOrder()->getId());
-//        echo '</pre>';
+
         try {
             $objPmReqCard = $this->mobilpayPaymentRequestCard;
             $objPmReqCard->signature = $this->getConfigData('auth/signature');
@@ -128,15 +117,22 @@ class Redirect extends Template
             $x509FilePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR . "sandbox." . $objPmReqCard->signature . ".public.cer";
 
             $objPmReqCard->orderId = $this->getOrder()->getId();
-            $objPmReqCard->returnUrl = $this->getUrl('netcard/success');
+            $objPmReqCard->returnUrl = $this->getUrl('netopia/payment/success');
+            $objPmReqCard->confirmUrl = $this->getUrl('netopia/payment/ipn/');
+//            $objPmReqCard->cancelUrl = $this->getUrl('netopia/magenpayment/cancel');
 
             // Add invoice info to Obj
             $objPmReqCard->invoice = $this->mobilpayPaymentInvoice;
 
             $objPmReqCard->invoice->currency = $order->getBaseCurrencyCode();
             $objPmReqCard->invoice->amount = $order->getBaseGrandTotal();
+
             $cart_description = $this->getConfigData('api/description');
-            if ($cart_description != '') $objPmReqCard->invoice->details = $cart_description;
+            if ($cart_description != '') {
+                $objPmReqCard->invoice->details = $cart_description;
+            } else {
+                $objPmReqCard->invoice->details = "Netopia - Magento 2 - Default description";
+            }
 
             // Add billing address info to Obj
             $billingAddress = $this->mobilpayPaymentAddress;
@@ -159,7 +155,7 @@ class Redirect extends Template
             $billingAddress->mobilePhone = $billing->getTelephone();
 
             $objPmReqCard->invoice->setBillingAddress($billingAddress);
-//            $objPmReqCard->encrypt($this->getConfigData('auth/public_key'));
+
             $objPmReqCard->encrypt($x509FilePath);
         } catch (\Exception $e) {
             $result['status'] = 0;
@@ -176,6 +172,7 @@ class Redirect extends Template
             $result['status'] = 0;
             $result['message'] = $e->getMessage();
         }
+
         return $result;
     }
 

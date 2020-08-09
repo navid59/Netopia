@@ -1,11 +1,12 @@
 <?php
     namespace Netopia\Netcard\Mobilpay\Payment\Request;
+    use \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice;
     include_once ('Abstract.php');
     /**
      * Class MobilpayPaymentRequestCard
      * This class can be used for accessing mobilpay.ro payment interface for your configured online services
      * @copyright NETOPIA
-     * @author Claudiu Tudose
+     * @author Claudiu Tudosecntru
      * @version 1.0
      *
      */
@@ -45,7 +46,8 @@
                 throw new \Exception('One or more mandatory properties are invalid!', self::ERROR_PREPARE_MANDATORY_PROPERTIES_UNSET);
             }
 
-            $this->_xmlDoc 		= new DOMDocument('1.0', 'utf-8');
+            // create an instance of Dom
+            $this->_xmlDoc 		= new \DOMDocument('1.0', 'utf-8');
             $rootElem 			= $this->_xmlDoc->createElement('order');
 
             //set payment type attribute
@@ -63,13 +65,16 @@
             $xmlAttr->nodeValue	= date('YmdHis');
             $rootElem->appendChild($xmlAttr);
 
+            //set signature attribute
             $xmlElem			= $this->_xmlDoc->createElement('signature');
             $xmlElem->nodeValue	= $this->signature;
             $rootElem->appendChild($xmlElem);
 
+            //set Invoice details to Dom instance
             $xmlElem			= $this->invoice->createXmlElement($this->_xmlDoc);
             $rootElem->appendChild($xmlElem);
 
+            // set Parameters
             if(is_array($this->params) && sizeof($this->params) > 0)
             {
                 $xmlParams = $this->_xmlDoc->createElement('params');
@@ -87,7 +92,6 @@
 
                     $xmlParams->appendChild($xmlParam);
                 }
-
                 $rootElem->appendChild($xmlParams);
             }
 
@@ -111,7 +115,6 @@
             }
 
             $this->_xmlDoc->appendChild($rootElem);
-
             return $this;
         }
 
