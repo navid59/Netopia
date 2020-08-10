@@ -7,8 +7,7 @@ namespace Netopia\Netcard\Block;
 use Magento\Framework\View\Element\Template;
 use Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice;
 use Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard;
-//use Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Invoice;
-//use Netopia\Netcard\Mobilpay\Payment\Mobilpay_Payment_Address;
+use \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress;
 use Magento\Framework\Module\Dir;
 
 /**
@@ -48,9 +47,6 @@ class Redirect extends Template
      * @param \Magento\Sales\Model\Order $orderFactory
      * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
      * @param \Magento\Framework\Module\Dir\Reader $reader
-     * @param \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard $mobilpayPaymentRequestCard
-     * @param \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice $mobilpayPaymentInvoice
-     * @param \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress $mobilpayPaymentAddress
      * @param array $data
      */
     public function __construct(
@@ -60,9 +56,6 @@ class Redirect extends Template
                                 \Magento\Sales\Model\Order $orderFactory,
                                 \Magento\Quote\Model\QuoteFactory $quoteFactory,
                                 \Magento\Framework\Module\Dir\Reader $reader,
-                                \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard $mobilpayPaymentRequestCard,
-                                \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice $mobilpayPaymentInvoice,
-                                \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress $mobilpayPaymentAddress,
                                 array $data)
     {
         $this->_resource = $resource;
@@ -70,9 +63,6 @@ class Redirect extends Template
         $this->_orderFactory = $orderFactory;
         $this->quoteFactory = $quoteFactory;
         $this->_moduleReader = $reader;
-        $this->mobilpayPaymentRequestCard = $mobilpayPaymentRequestCard;
-        $this->mobilpayPaymentInvoice = $mobilpayPaymentInvoice;
-        $this->mobilpayPaymentAddress = $mobilpayPaymentAddress;
         parent::__construct($context, $data);
     }
 
@@ -93,10 +83,16 @@ class Redirect extends Template
         /** @var bool $isLoggedIn */
         $isLoggedIn = $context->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);
         if ($isLoggedIn) {
-            return $this->quoteFactory->create()->load($quoteId);
-        }else {
+            $orderId = $connection->fetchAll('SELECT entity_id FROM `'.$tblSalesOrder.'` WHERE quote_id='.$connection->quote($quoteId).' LIMIT 1');
+            //return $this->quoteFactory->create()->load($quoteId);
+//            $order = $this->_checkoutSession->getLastRealOrder();
+//            $orderId=$order->getEntityId();
+        } else {
+            //$orderId = $connection->fetchAll('SELECT `'.$tblSalesOrder.'`.entity_id FROM `'.$tblSalesOrder.'` INNER JOIN `'.$tblQuoteIdMask.'` ON `'.$tblSalesOrder.'`.quote_id=`'.$tblQuoteIdMask.'`.quote_id AND `'.$tblQuoteIdMask.'`.masked_id='.$connection->quote($quoteId));
             Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('customer/account'));
         }
+        //print_r($this->_orderFactory->loadByAttribute('entity_id',$orderId));
+        return $this->_orderFactory->loadByAttribute('entity_id',$orderId);
     }
 
 
@@ -107,22 +103,27 @@ class Redirect extends Template
         $shipping = $this->getOrder()->getShippingAddress();
         $billing = $this->getOrder()->getBillingAddress();
         $order = $this->getOrder();
+        echo $order->getId();
+        //die('jahsdkjsa');
+        //var_dump($order);
         $result = [];
 
         try {
-            $objPmReqCard = $this->mobilpayPaymentRequestCard;
+            $objPmReqCard = new MobilpayPaymentRequestCard();
             $objPmReqCard->signature = $this->getConfigData('auth/signature');
 
             // Get Public Key filename
             $x509FilePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR . "sandbox." . $objPmReqCard->signature . ".public.cer";
 
             $objPmReqCard->orderId = $this->getOrder()->getId();
+//            echo ($objPmReqCard->orderId);
+//            die('www');
             $objPmReqCard->returnUrl = $this->getUrl('netopia/payment/success');
             $objPmReqCard->confirmUrl = $this->getUrl('netopia/payment/ipn/');
 //            $objPmReqCard->cancelUrl = $this->getUrl('netopia/magenpayment/cancel');
 
             // Add invoice info to Obj
-            $objPmReqCard->invoice = $this->mobilpayPaymentInvoice;
+            $objPmReqCard->invoice = new MobilpayPaymentInvoice();
 
             $objPmReqCard->invoice->currency = $order->getBaseCurrencyCode();
             $objPmReqCard->invoice->amount = $order->getBaseGrandTotal();
@@ -135,9 +136,9 @@ class Redirect extends Template
             }
 
             // Add billing address info to Obj
-            $billingAddress = $this->mobilpayPaymentAddress;
-
+            $billingAddress = new MobilpayPaymentAddress();
             $company = $billing->getCompany();
+            var_dump($company);
             if (!empty($company)) {
                 $billingAddress->type = 'company';
             } else {

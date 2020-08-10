@@ -5,9 +5,10 @@
  */
 namespace Netopia\Netcard\Block;
 
-use Magento\Framework\View\Element\Template;
-use Magento\Framework\View\Element\Template\Context;
-use Magento\Checkout\Model\Session;
+//use Magento\Framework\View\Element\Template;
+//use Magento\Framework\View\Element\Template\Context;
+//use Magento\Checkout\Model\Session;
+use Magento\Customer\Model\Context;
 use Magento\Sales\Model\Order;
 /**
  * Class Success
@@ -89,14 +90,20 @@ class Success extends \Magento\Framework\View\Element\Template
      */
     protected function isVisible(Order $order)
     {
-        return !in_array(
+//        echo "<pre>";
+//        var_dump($this->_orderConfig->getInvisibleOnFrontStatuses());
+//        echo "</pre>";
+
+       return !in_array(
             $order->getStatus(),
             $this->_orderConfig->getInvisibleOnFrontStatuses()
         );
     }
 
     public function getOrder(){
+
         $orderId = $this->getRequest()->getParam('orderId');
-        return $this->_orderFactory->load($orderId);
+        //return $this->_orderFactory->loadByIncrementId($orderId);
+        return $this->_orderFactory->loadByAttribute('entity_id',$orderId);
     }
 }
