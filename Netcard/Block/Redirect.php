@@ -88,8 +88,8 @@ class Redirect extends Template
 //            $order = $this->_checkoutSession->getLastRealOrder();
 //            $orderId=$order->getEntityId();
         } else {
-            //$orderId = $connection->fetchAll('SELECT `'.$tblSalesOrder.'`.entity_id FROM `'.$tblSalesOrder.'` INNER JOIN `'.$tblQuoteIdMask.'` ON `'.$tblSalesOrder.'`.quote_id=`'.$tblQuoteIdMask.'`.quote_id AND `'.$tblQuoteIdMask.'`.masked_id='.$connection->quote($quoteId));
-            Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('customer/account'));
+            $orderId = $connection->fetchAll('SELECT `'.$tblSalesOrder.'`.entity_id FROM `'.$tblSalesOrder.'` INNER JOIN `'.$tblQuoteIdMask.'` ON `'.$tblSalesOrder.'`.quote_id=`'.$tblQuoteIdMask.'`.quote_id AND `'.$tblQuoteIdMask.'`.masked_id='.$connection->quote($quoteId));
+           // Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getUrl('customer/account'));
         }
         //print_r($this->_orderFactory->loadByAttribute('entity_id',$orderId));
         return $this->_orderFactory->loadByAttribute('entity_id',$orderId);
@@ -138,7 +138,6 @@ class Redirect extends Template
             // Add billing address info to Obj
             $billingAddress = new MobilpayPaymentAddress();
             $company = $billing->getCompany();
-            var_dump($company);
             if (!empty($company)) {
                 $billingAddress->type = 'company';
             } else {

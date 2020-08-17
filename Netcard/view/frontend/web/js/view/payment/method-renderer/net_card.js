@@ -9,7 +9,8 @@ define(
         'ko',
         'jquery',
         'Magento_Checkout/js/view/payment/default',
-        'Netopia_Netcard/js/action/set-payment-method-action'
+        'Netopia_Netcard/js/action/set-payment-method-action',
+        'Netopia_Netcard/js/action/set-payment-method-qr-action'
     ],
     function (ko, $, Component, setPaymentMethodAction) {
         'use strict';
@@ -21,9 +22,10 @@ define(
                 transactionResult: ''
             },
             afterPlaceOrder: function () {
+                // May we can use after paymment is done, ...
                 // alert('Palce Order is Pushed');
                 setPaymentMethodAction(this.messageContainer);
-                // console.log('Just Nothing after Order Place');
+                console.log('Just Nothing after Order Place');
                 return false;
             },
             initObservable: function () {
