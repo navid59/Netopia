@@ -12,7 +12,7 @@
                 <model>NetcardFacade</model>
                 <title>Netopia Payment method ( Sandbox )</title>
                 <payment_action>authorize</payment_action>
-                <active>0</active>
+                <active>1</active>
                 <debug>1</debug>
                 <is_gateway>1</is_gateway>
                 <can_use_checkout>1</can_use_checkout>
