@@ -27,7 +27,8 @@ class Mobilpay_Payment_Invoice_Item
 	public $price		= null;
 	public $vat			= null;
 
-	public function __construct(DOMNode $elem = null)
+//	public function __construct(DOMNode $elem = null)
+	public function __construct($elem = null)
 	{
 		if($elem != null)
 		{
