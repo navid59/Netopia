@@ -48,7 +48,7 @@ class Mobilpay_Payment_Product_Code
             'node' => 0 ,
             'req' => 0));
 
-    public function __construct (DOMNode $elem = null)
+    public function __construct (\DOMNode $elem = null)
     {
 
         if ($elem != null)
@@ -57,7 +57,7 @@ class Mobilpay_Payment_Product_Code
         }
     }
 
-    protected function loadFromXml (DOMNode $elem)
+    protected function loadFromXml (\DOMNode $elem)
     {
 
         foreach ($this->_structure as $key => $props)
