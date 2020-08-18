@@ -9,8 +9,8 @@ use Magento\Framework\View\Result\PageFactory;
 use Magento\Sales\Model\Order;
 use Magento\Framework\DataObject;
 
-//include_once ('Abstract.php');
 use Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Abstract;
+use Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Info;
 
 class Ipn extends Action {
     /**
@@ -63,7 +63,7 @@ class Ipn extends Action {
             die('Please post your data');
         try
         {
-            if ($objPmReq instanceof \Mobilpay_Payment_Request_Info)
+            if ($objPmReq instanceof Mobilpay_Payment_Request_Info)
             {
                 $this->_processRequestProduct($objPmReq);
             } else
@@ -90,7 +90,9 @@ class Ipn extends Action {
         $this->_objPmReq = $objPmReq;
         $order_id = $objPmReq->orderId;
 
-        $this->_order = $this->_orderFactory->load((int)$order_id);
+//        $this->_order = $this->_orderFactory->load((int)$order_id); // Load not suported
+        $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+        $this->_order = $objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId((int)$order_id);
 
         $this->_newOrderStatus = 'pending';
 
@@ -382,9 +384,10 @@ class Ipn extends Action {
         {
             $envKey = $request->getParam('env_key', false);
             $envData = $request->getParam('data', false);
+
             if ($envKey && $envData)
             {
-                $filePath = $this->_moduleDirReader->getModuleDir('etc', 'Mobilpay_Credit');
+                $filePath = $this->_moduleDirReader->getModuleDir('etc', 'Netopia_Netcard');
                 $path = $filePath . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR;
 
                 if ($this->getConfigData('debug') == 1) {
