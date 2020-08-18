@@ -9,8 +9,7 @@ define(
         'ko',
         'jquery',
         'Magento_Checkout/js/view/payment/default',
-        'Netopia_Netcard/js/action/set-payment-method-action',
-        'Netopia_Netcard/js/action/set-payment-method-qr-action'
+        'Netopia_Netcard/js/action/set-payment-method-action'
     ],
     function (ko, $, Component, setPaymentMethodAction) {
         'use strict';
