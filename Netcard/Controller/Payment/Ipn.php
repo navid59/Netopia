@@ -59,6 +59,14 @@ class Ipn extends Action {
     public function execute()
     {
         $objPmReq = $this->_processRequest();
+        ///////////////////////
+        ob_start();
+        var_dump($GLOBALS);
+        $data = ob_get_clean();
+        $fp = fopen("/var/www/html/var/log/ipn.log", "w");
+        fwrite($fp, $data);
+        fclose($fp);
+        ///////////////////////
         if(!$objPmReq)
             die('Please post your data');
         try
