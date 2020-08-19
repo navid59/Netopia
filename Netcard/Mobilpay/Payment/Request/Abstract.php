@@ -11,6 +11,8 @@ namespace Netopia\Netcard\Mobilpay\Payment\Request;
  * In order to use the OpenSSL functions you need to install the OpenSSL package.
  * Check PHP documentation for installing OpenSSL package
  */
+
+ 
 abstract class Mobilpay_Payment_Request_Abstract
 {
 	const PAYMENT_TYPE_SMS	= 'sms';
@@ -120,12 +122,12 @@ abstract class Mobilpay_Payment_Request_Abstract
 	}
 
 	abstract protected function _prepare();
-	abstract protected function _loadFromXml(DOMElement $elem);
+	abstract protected function _loadFromXml(\DOMElement $elem);
 
 	static public function factory($data)
 	{
 		$objPmReq = null;
-		$xmlDoc = new DOMDocument();
+		$xmlDoc = new \DOMDocument();
 		if(@$xmlDoc->loadXML($data) === true)
 		{
 			//try to create payment request from xml
@@ -181,7 +183,7 @@ abstract class Mobilpay_Payment_Request_Abstract
 		return Mobilpay_Payment_Request_Abstract::factory($data);
 	}
 
-	static protected function _factoryFromXml(DOMDocument $xmlDoc)
+	static protected function _factoryFromXml(\DOMDocument $xmlDoc)
 	{
 		$elems = $xmlDoc->getElementsByTagName('order');
 		if($elems->length != 1)
@@ -198,7 +200,7 @@ abstract class Mobilpay_Payment_Request_Abstract
 		switch ($attr->nodeValue)
 		{
 		case Mobilpay_Payment_Request_Abstract::PAYMENT_TYPE_CARD:
-			$objPmReq = new Mobilpay_Payment_Request_Card();
+			$objPmReq = new MobilpayPaymentRequestCard();
 			break;
 		case Mobilpay_Payment_Request_Abstract::PAYMENT_TYPE_SMS:
 			$objPmReq =  new Mobilpay_Payment_Request_Sms();

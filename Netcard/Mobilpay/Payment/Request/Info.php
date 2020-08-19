@@ -15,7 +15,7 @@ class Mobilpay_Payment_Request_Info extends Mobilpay_Payment_Request_Abstract
         $this->type = self::PAYMENT_TYPE_INFO;
     }
 
-    protected function _loadFromXml (DOMElement $elem)
+    protected function _loadFromXml (\DOMElement $elem)
     {
 
         parent::_parseFromXml($elem);

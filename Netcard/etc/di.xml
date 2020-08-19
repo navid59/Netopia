@@ -140,6 +140,9 @@
             <argument name="config" xsi:type="object">NetcardConfig</argument>
         </arguments>
     </type>
+    <type name="Magento\Framework\App\Request\CsrfValidator">
+        <plugin name="csrf_validator_skip" type="Netopia\Netcard\Mobilpay\Plugin\CsrfValidatorSkip" />
+    </type>
     <preference for="\Netopia\Netcard\Block" type="Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard"></preference>
     <preference for="\Netopia\Netcard\Block" type="Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice"></preference>
     <preference for="\Netopia\Netcard\Block" type="Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress"></preference>

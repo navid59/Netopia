@@ -1,24 +1,28 @@
 <?php
 namespace Netopia\Netcard\Controller\Payment;
 
-use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Module\Dir\Reader;
 use Magento\Framework\View\Result\PageFactory;
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
 
 use Magento\Sales\Model\Order;
 use Magento\Framework\DataObject;
 
-use Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Abstract;
+
 use Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Info;
+include_once ('./app/code/Netopia/Netcard/Mobilpay/Payment/Request/Abstract.php');
+
 
 class Ipn extends Action implements CsrfAwareActionInterface {
-    /**
-     * @var PageFactory
-     */
-    protected  $pageFactory;
+    
+    
     protected $resultPateFactory;
     protected $_orderFactory;
     protected $_moduleDirReader;
@@ -30,26 +34,38 @@ class Ipn extends Action implements CsrfAwareActionInterface {
     /**
      * Ipn constructor.
      * @param Context $context
-     * @param PageFactory $pageFactory
      * @param PageFactory $resultPageFactory
-     * @param \Magento\Framework\Module\Dir\Reader $reader
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param Order\Payment\Transaction\BuilderInterface $builderInterface
+     * @param Reader $reader
+     * @param ScopeConfigInterface $scopeConfig
+     * @param BuilderInterface $builderInterface
      * @param Order $orderFactory
      */
 
     public function __construct(
         Context $context,
-        PageFactory $pageFactory,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \Magento\Framework\Module\Dir\Reader $reader,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface,
-        \Magento\Sales\Model\Order $orderFactory
+        PageFactory $resultPageFactory,
+        Reader $reader,
+        ScopeConfigInterface $scopeConfig,
+        BuilderInterface $builderInterface,
+        Order $orderFactory
     )
     {
         parent::__construct($context);
-        $this->pageFactory = $pageFactory;
+        $this->_orderFactory = $orderFactory;
+        $this->resultPateFactory = $resultPageFactory;
+        $this->_moduleDirReader = $reader;
+        $this->_scopeConfig = $scopeConfig;
+        $this->_builderInterface = $builderInterface;
+    }
+
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
+    {
+        return null;
+    }
+
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
     }
 
     /**
@@ -87,15 +103,6 @@ class Ipn extends Action implements CsrfAwareActionInterface {
         }
     }
 
-    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
-    {
-        return null;
-    }
-
-    public function validateForCsrf(RequestInterface $request): ?bool
-    {
-        return true;
-    }
     
     public function setLog($log) {
    	 file_put_contents('/var/www/html/var/log/ipnLog.log', $log.' ||| ', FILE_APPEND | LOCK_EX);
@@ -399,12 +406,13 @@ class Ipn extends Action implements CsrfAwareActionInterface {
 
     private function _processRequest ()
     {
-        $this->setLog('Get Response');
+        
         error_reporting(E_ALL);
         $objPmReq = false;
         $request = $this->getRequest();
         if ($request->isPost())
         {
+            $this->setLog('Post request');
             $envKey = $request->getParam('env_key', false);
             $envData = $request->getParam('data', false);
        
