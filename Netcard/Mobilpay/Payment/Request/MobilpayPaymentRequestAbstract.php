@@ -1,7 +1,7 @@
 <?php
 namespace Netopia\Netcard\Mobilpay\Payment\Request;
 /**
- * Class Mobilpay_Payment_Request_Abstract
+ * Class MobilpayPaymentRequestAbstract
  * This class can be used for accessing mobilpay.ro payment interface for your configured online services
  * @copyright NETOPIA
  * @author Claudiu Tudose
@@ -12,8 +12,8 @@ namespace Netopia\Netcard\Mobilpay\Payment\Request;
  * Check PHP documentation for installing OpenSSL package
  */
 
- 
-abstract class Mobilpay_Payment_Request_Abstract
+use Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestSms; 
+abstract class MobilpayPaymentRequestAbstract
 {
 	const PAYMENT_TYPE_SMS	= 'sms';
 	const PAYMENT_TYPE_CARD	= 'card';
@@ -53,8 +53,8 @@ abstract class Mobilpay_Payment_Request_Abstract
 	public $signature 	= null;
 	/**
 	 * service - identifier of service/product for which you're requesting a payment
-	 * Mandatory for Mobilpay_Payment_Request_Sms
-	 * Optional for Mobilpay_Payment_Request_Card
+	 * Mandatory for MobilpayPaymentRequestSms
+	 * Optional for MobilpayPaymentRequestCard
 	 */
 	public $service		= null;
 
@@ -131,13 +131,13 @@ abstract class Mobilpay_Payment_Request_Abstract
 		if(@$xmlDoc->loadXML($data) === true)
 		{
 			//try to create payment request from xml
-			$objPmReq = Mobilpay_Payment_Request_Abstract::_factoryFromXml($xmlDoc);
+			$objPmReq = MobilpayPaymentRequestAbstract::_factoryFromXml($xmlDoc);
 			$objPmReq->_setRequestInfo(self::VERSION_XML, $data);
 		}
 		else
 		{
 			//try to create payment request from query string
-			$objPmReq = Mobilpay_Payment_Request_Abstract::_factoryFromQueryString($data);
+			$objPmReq = MobilpayPaymentRequestAbstract::_factoryFromQueryString($data);
 			$objPmReq->_setRequestInfo(self::VERSION_QUERY_STRING, $data);
 		}
 
@@ -180,7 +180,7 @@ abstract class Mobilpay_Payment_Request_Abstract
 			throw new \Exception('Failed decrypting data', self::ERROR_CONFIRM_FAILED_DECRYPT_DATA);
 		}
 
-		return Mobilpay_Payment_Request_Abstract::factory($data);
+		return MobilpayPaymentRequestAbstract::factory($data);
 	}
 
 	static protected function _factoryFromXml(\DOMDocument $xmlDoc)
@@ -188,25 +188,25 @@ abstract class Mobilpay_Payment_Request_Abstract
 		$elems = $xmlDoc->getElementsByTagName('order');
 		if($elems->length != 1)
 		{
-			throw new \Exception('factoryFromXml order element not found', Mobilpay_Payment_Request_Abstract::ERROR_FACTORY_BY_XML_ORDER_ELEM_NOT_FOUND);
+			throw new \Exception('factoryFromXml order element not found', MobilpayPaymentRequestAbstract::ERROR_FACTORY_BY_XML_ORDER_ELEM_NOT_FOUND);
 		}
 		$orderElem = $elems->item(0);
 
 		$attr = $orderElem->attributes->getNamedItem('type');
 		if($attr == null || strlen($attr->nodeValue) == 0)
 		{
-			throw new \Exception('factoryFromXml invalid payment request type=' . $attr->nodeValue, Mobilpay_Payment_Request_Abstract::ERROR_FACTORY_BY_XML_ORDER_TYPE_ATTR_NOT_FOUND);
+			throw new \Exception('factoryFromXml invalid payment request type=' . $attr->nodeValue, MobilpayPaymentRequestAbstract::ERROR_FACTORY_BY_XML_ORDER_TYPE_ATTR_NOT_FOUND);
 		}
 		switch ($attr->nodeValue)
 		{
-		case Mobilpay_Payment_Request_Abstract::PAYMENT_TYPE_CARD:
+		case MobilpayPaymentRequestAbstract::PAYMENT_TYPE_CARD:
 			$objPmReq = new MobilpayPaymentRequestCard();
 			break;
-		case Mobilpay_Payment_Request_Abstract::PAYMENT_TYPE_SMS:
-			$objPmReq =  new Mobilpay_Payment_Request_Sms();
+		case MobilpayPaymentRequestAbstract::PAYMENT_TYPE_SMS:
+			$objPmReq =  new MobilpayPaymentRequestSms();
 			break;
 		default:
-			throw new \Exception('factoryFromXml invalid payment request type=' . $attr->nodeValue, Mobilpay_Payment_Request_Abstract::ERROR_FACTORY_BY_XML_INVALID_TYPE);
+			throw new \Exception('factoryFromXml invalid payment request type=' . $attr->nodeValue, MobilpayPaymentRequestAbstract::ERROR_FACTORY_BY_XML_INVALID_TYPE);
 			break;
 		}
 		$objPmReq->_loadFromXml($orderElem);
@@ -216,14 +216,14 @@ abstract class Mobilpay_Payment_Request_Abstract
 
 	static protected function _factoryFromQueryString($data)
 	{
-		$objPmReq = new Mobilpay_Payment_Request_Sms();
+		$objPmReq = new MobilpayPaymentRequestSms();
 		$objPmReq->_loadFromQueryString($data);
 		return $objPmReq;
 	}
 
 	protected function _setRequestInfo($reqVersion, $reqData)
 	{
-		$this->_objRequestInfo = new stdClass();
+		$this->_objRequestInfo = new \stdClass();
 		$this->_objRequestInfo->reqVersion 	= $reqVersion;
 		$this->_objRequestInfo->reqData 	= $reqData;
 	}
@@ -238,14 +238,14 @@ abstract class Mobilpay_Payment_Request_Abstract
 		$xmlAttr = $elem->attributes->getNamedItem('id');
 		if($xmlAttr == null || strlen((string)$xmlAttr->nodeValue) == 0)
 		{
-			throw new \Exception('Mobilpay_Payment_Request_Sms::_parseFromXml failed: empty order id', self::ERROR_LOAD_FROM_XML_ORDER_ID_ATTR_MISSING);
+			throw new \Exception('MobilpayPaymentRequestSms::_parseFromXml failed: empty order id', self::ERROR_LOAD_FROM_XML_ORDER_ID_ATTR_MISSING);
 		}
 		$this->orderId = $xmlAttr->nodeValue;
 
 		$elems = $elem->getElementsByTagName('signature');
 		if($elems->length != 1)
 		{
-			throw new \Exception('Mobilpay_Payment_Request_Sms::loadFromXml failed: signature is missing', self::ERROR_LOAD_FROM_XML_SIGNATURE_ELEM_MISSING);
+			throw new \Exception('MobilpayPaymentRequestSms::loadFromXml failed: signature is missing', self::ERROR_LOAD_FROM_XML_SIGNATURE_ELEM_MISSING);
 		}
 		$xmlElem = $elems->item(0);
 		$this->signature = $xmlElem->nodeValue;
@@ -296,7 +296,7 @@ abstract class Mobilpay_Payment_Request_Abstract
 		$elems = $elem->getElementsByTagName('mobilpay');
 		if($elems->length == 1)
 		{
-			$this->objPmNotify = new Mobilpay_Payment_Request_Notify();
+			$this->objPmNotify = new MobilpayPaymentRequestNotify();
 			$this->objPmNotify->loadFromXml($elems->item(0));
 		}
 	}
@@ -374,7 +374,7 @@ abstract class Mobilpay_Payment_Request_Abstract
         return $this->_objRequestParams->$name;
     }
     public function __wakeup(){
-        $this->_objRequestParams= new stdClass();
+        $this->_objRequestParams= new \stdClass();
     }
     public function __sleep()
     {

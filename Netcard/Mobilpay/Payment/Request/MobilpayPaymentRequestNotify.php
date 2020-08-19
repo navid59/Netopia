@@ -3,13 +3,16 @@ namespace Netopia\Netcard\Mobilpay\Payment\Request;
 /**
  * mobilPay
  *
- * @package   Mobilpay_Payment_Request_Notify
+ * @package   MobilpayPaymentRequestNotify
  * @copyright  Copyright (c)NETOPIA
  * @author      Claudiu Tudose <claudiu.tudose@netopia-system.com>
  *
  * This class is used for the IPN
  */
-class Mobilpay_Payment_Request_Notify {
+
+use \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress;
+
+class MobilpayPaymentRequestNotify {
 
     /**
      *
@@ -101,17 +104,17 @@ class Mobilpay_Payment_Request_Notify {
         }
         $attr = $elem->attributes->getNamedItem('crc');
         if ($attr == null) {
-            throw new Exception('Mobilpay_Payment_Request_Notify::loadFromXml failed; mandatory crc attribute missing', self::ERROR_LOAD_FROM_XML_CRC_ATTR_MISSING);
+            throw new Exception('MobilpayPaymentRequestNotify::loadFromXml failed; mandatory crc attribute missing', self::ERROR_LOAD_FROM_XML_CRC_ATTR_MISSING);
         }
         $this->_crc = $attr->nodeValue;
         $elems = $elem->getElementsByTagName('action');
         if ($elems->length != 1) {
-            throw new Exception('Mobilpay_Payment_Request_Notify::loadFromXml failed; mandatory action attribute missing', self::ERROR_LOAD_FROM_XML_ACTION_ELEM_MISSING);
+            throw new Exception('MobilpayPaymentRequestNotify::loadFromXml failed; mandatory action attribute missing', self::ERROR_LOAD_FROM_XML_ACTION_ELEM_MISSING);
         }
         $this->action = $elems->item(0)->nodeValue;
         $elems = $elem->getElementsByTagName('customer');
         if ($elems->length == 1) {
-            $this->customer = new Mobilpay_Payment_Address($elems->item(0));
+            $this->customer = new MobilpayPaymentAddress($elems->item(0));
         }
         $elems = $elem->getElementsByTagName('issuer');
         if ($elems->length == 1) {
@@ -183,7 +186,7 @@ class Mobilpay_Payment_Request_Notify {
             $doaElems = $elems->item(0)->getElementsByTagName('discount');
             $this->discounts = Array();
             foreach ($doaElems as $de) {
-                $doaEntry = new stdClass();
+                $doaEntry = new \stdClass();
                 $doaEntry->id = $de->attributes->getNamedItem('id')->nodeValue;
                 $doaEntry->amount = $de->attributes->getNamedItem('amount')->nodeValue;
                 $doaEntry->currency = $de->attributes->getNamedItem('currency')->nodeValue;
@@ -249,7 +252,7 @@ class Mobilpay_Payment_Request_Notify {
         $elem = $xmlDoc->createElement('action');
         $elem->nodeValue = $this->action;
         $xmlNotifyElem->appendChild($elem);
-        if ($this->customer instanceof Mobilpay_Payment_Address) {
+        if ($this->customer instanceof MobilpayPaymentAddress) {
             $xmlNotifyElem->appendChild($this->customer->createXmlElement($xmlDoc, 'customer'));
         }
         $elem = $xmlDoc->createElement('purchase');

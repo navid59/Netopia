@@ -114,7 +114,7 @@
                     {
                         try
                         {
-                            $objItem = new Mobilpay_Payment_Invoice_Item($itemElem);
+                            $objItem = new MobilpayPaymentInvoiceItem($itemElem);
                             $this->items[] = $objItem;
                             $amount += $objItem->getTotalAmount();
                         }
@@ -256,7 +256,7 @@
                 $xmlItems = null;
                 foreach ($this->items as $item)
                 {
-                    if(!($item instanceof Mobilpay_Payment_Invoice_Item))
+                    if(!($item instanceof MobilpayPaymentInvoiceItem))
                     {
                         continue;
                     }
@@ -336,14 +336,14 @@
             return $this->shippingAddress;
         }
 
-        public function addHeadItem(Mobilpay_Payment_Invoice_Item $item)
+        public function addHeadItem(MobilpayPaymentInvoiceItem $item)
         {
             array_unshift($this->items, $item);
 
             return $this;
         }
 
-        public function addTailItem(Mobilpay_Payment_Invoice_Item $item)
+        public function addTailItem(MobilpayPaymentInvoiceItem $item)
         {
             array_push($this->items, $item);
 

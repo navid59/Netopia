@@ -1,7 +1,7 @@
 <?php
 namespace Netopia\Netcard\Mobilpay\Payment;
 /**
- * Class Mobilpay_Payment_Request
+ * Class MobilpayPaymentRequest
  * This class can be used for accessing mobilpay.ro payment interface for your configured online services
  * @copyright NETOPIA
  * @author Claudiu Tudose
@@ -11,7 +11,7 @@ namespace Netopia\Netcard\Mobilpay\Payment;
  * In order to use the OpenSSL functions you need to install the OpenSSL package.
  * See PHP documentation for installing OpenSSL package
  */
-class Mobilpay_Payment_Request
+class MobilpayPaymentRequest
 {
 	const PAYMENT_TYPE_SMS	= 0x01;
 	const PAYMENT_TYPE_CARD	= 0x02;
@@ -172,7 +172,7 @@ class Mobilpay_Payment_Request
 		$params = $this->builParametersList();
 		if(is_null($params))
 			return false;
-		$src_data = Mobilpay_Payment_Request::buildQueryString($params);
+		$src_data = MobilpayPaymentRequest::buildQueryString($params);
 		$enc_data = '';
 		$env_keys = array();
 		$result = openssl_seal($src_data, $enc_data, $env_keys, array($public_key));

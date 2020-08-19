@@ -10,6 +10,7 @@ namespace Netopia\Netcard\Block;
 //use Magento\Checkout\Model\Session;
 use Magento\Customer\Model\Context;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Config;
 /**
  * Class Success
  * To handel Success or Failed Payment
@@ -21,9 +22,9 @@ class Success extends \Magento\Framework\View\Element\Template
     protected $_orderConfig;
     protected $httpContext;
     public function __construct(\Magento\Framework\View\Element\Template\Context $context,
-                                \Magento\Sales\Model\Order $orderFactory,
+                                Order $orderFactory,
                                 \Magento\Framework\App\Http\Context $httpContext,
-                                \Magento\Sales\Model\Order\Config $orderConfig,
+                                Config $orderConfig,
                                 array $data)
     {
         $this->_orderFactory = $orderFactory;

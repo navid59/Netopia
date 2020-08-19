@@ -16,8 +16,9 @@ use Magento\Sales\Model\Order;
 use Magento\Framework\DataObject;
 
 
-use Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Info;
-include_once ('./app/code/Netopia/Netcard/Mobilpay/Payment/Request/Abstract.php');
+use \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestInfo;
+use \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestAbstract;
+
 
 
 class Ipn extends Action implements CsrfAwareActionInterface {
@@ -87,7 +88,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
         try
         {
            $this->setLog(' | Ipn Try');
-           if ($objPmReq instanceof Mobilpay_Payment_Request_Info)
+           if ($objPmReq instanceof MobilpayPaymentRequestInfo)
             {
                 $this->setLog(' | Ipn Try Case 1');
                 $this->_processRequestProduct($objPmReq);
@@ -99,7 +100,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
         } catch (\Exception $e)
         {
             $this->setLog(' | Ipn Exception Case 3');
-            $this->_sendResponse(Mobilpay_Payment_Request_Abstract::CONFIRM_ERROR_TYPE_TEMPORARY, $e->getCode()+100, $e->getMessage());
+            $this->_sendResponse(MobilpayPaymentRequestAbstract::CONFIRM_ERROR_TYPE_TEMPORARY, $e->getCode()+100, $e->getMessage());
         }
     }
 
@@ -132,18 +133,20 @@ class Ipn extends Action implements CsrfAwareActionInterface {
     protected function _processNotification($objPmReq)
     {
         $errorCode = 0;
-        $errorType = Mobilpay_Payment_Request_Abstract::CONFIRM_ERROR_TYPE_NONE;
+        $errorType = MobilpayPaymentRequestAbstract::CONFIRM_ERROR_TYPE_NONE;
         $errorMessage = '';
         $this->_initData($objPmReq);
 
         switch ($objPmReq->objPmNotify->action) {
             case 'confirmed':
+            $this->setLog(' | confirmed');
                 if ($objPmReq->objPmNotify->errorCode == 0) {
                     $this->_handleCapture();
                 }
                 break;
 
             case 'confirmed_pending':
+            $this->setLog(' | confirmed_pending');
                 if ($objPmReq->objPmNotify->errorCode != 0) {
                     $this->_handlePaymentDenial();
                 } else {
@@ -152,6 +155,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 break;
 
             case 'paid_pending':
+            $this->setLog(' | paid_pending');
                 if ($objPmReq->objPmNotify->errorCode != 0) {
                     $this->_handlePaymentDenial();
                 } else {
@@ -160,6 +164,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 break;
 
             case 'paid':
+            $this->setLog(' | paid');
                 if ($objPmReq->objPmNotify->errorCode != 0) {
                     $this->_handlePaymentDenial();
                 } else {
@@ -170,6 +175,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 break;
 
             case 'canceled':
+            $this->setLog(' | canceled');
                 if ($objPmReq->objPmNotify->errorCode == 0) {
 
                     $this->_handleCancel();
@@ -177,6 +183,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 break;
 
             case 'credit':
+            $this->setLog(' | credit');
                 if ($objPmReq->objPmNotify->errorCode == 0) {
 
                     $this->_handleRefund();
@@ -184,8 +191,8 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 break;
 
             default:
-                $errorType = Mobilpay_Payment_Request_Abstract::CONFIRM_ERROR_TYPE_PERMANENT;
-                $errorCode = Mobilpay_Payment_Request_Abstract::ERROR_CONFIRM_INVALID_ACTION;
+                $errorType = MobilpayPaymentRequestAbstract::CONFIRM_ERROR_TYPE_PERMANENT;
+                $errorCode = MobilpayPaymentRequestAbstract::ERROR_CONFIRM_INVALID_ACTION;
                 $errorMessage = 'mobilpay_refference_action paramaters is invalid';
                 break;
         }
@@ -431,11 +438,11 @@ class Ipn extends Action implements CsrfAwareActionInterface {
 
                 try
                 {
-                    $objPmReq = Mobilpay_Payment_Request_Abstract::factoryFromEncrypted($envKey, $envData, $privateKeyFilePath);
+                    $objPmReq = MobilpayPaymentRequestAbstract::factoryFromEncrypted($envKey, $envData, $privateKeyFilePath);
                 } catch (\Exception $e)
                 {
 
-                    $this->_sendResponse(Mobilpay_Payment_Request_Abstract::CONFIRM_ERROR_TYPE_TEMPORARY, $e->getCode(), $e->getMessage());
+                    $this->_sendResponse(MobilpayPaymentRequestAbstract::CONFIRM_ERROR_TYPE_TEMPORARY, $e->getCode(), $e->getMessage());
                 }
 
             }

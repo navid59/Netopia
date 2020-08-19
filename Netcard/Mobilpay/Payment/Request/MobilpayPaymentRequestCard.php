@@ -1,7 +1,7 @@
 <?php
     namespace Netopia\Netcard\Mobilpay\Payment\Request;
     use \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice;
-    include_once ('Abstract.php');
+    use \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestAbstract;    
     /**
      * Class MobilpayPaymentRequestCard
      * This class can be used for accessing mobilpay.ro payment interface for your configured online services
@@ -11,7 +11,7 @@
      *
      */
 
-    class MobilpayPaymentRequestCard extends Mobilpay_Payment_Request_Abstract
+    class MobilpayPaymentRequestCard extends MobilpayPaymentRequestAbstract
     {
         const ERROR_LOAD_FROM_XML_ORDER_INVOICE_ELEM_MISSING	= 0x30000001;
 

@@ -1,7 +1,7 @@
 <?php
 namespace Netopia\Netcard\Mobilpay\Payment\Product;
 
-class Mobilpay_Payment_Product_Code
+class MobilpayPaymentProductCode
 {
     const ERROR_INVALID_PARAMETER = 0x11110001;
     const ERROR_INVALID_STATUS = 0x11110002;
@@ -75,7 +75,7 @@ class Mobilpay_Payment_Product_Code
                     $tmp = $elem->getElementsByTagName($key);
                     if ($tmp == null && $props['req'])
                     {
-                        throw new Exception("Mobilpay_Payment_Product_Code :: loadFromXml failed; {$key} attribute missing", self::ERROR_LOAD_FROM_XML_ATTR_MISSING);
+                        throw new Exception("MobilpayPaymentProductCode :: loadFromXml failed; {$key} attribute missing", self::ERROR_LOAD_FROM_XML_ATTR_MISSING);
                     }
                     $this->$key = $tmp->item(0)->nodeValue;
                     break;
@@ -84,10 +84,10 @@ class Mobilpay_Payment_Product_Code
 
     }
 
-    public function createXmlElement (DOMDocument $xmlDoc)
+    public function createXmlElement (\DOMDocument $xmlDoc)
     {
 
-        if (! ($xmlDoc instanceof DOMDocument))
+        if (! ($xmlDoc instanceof \DOMDocument))
         {
             throw new Exception('', self::ERROR_INVALID_PARAMETER);
         }

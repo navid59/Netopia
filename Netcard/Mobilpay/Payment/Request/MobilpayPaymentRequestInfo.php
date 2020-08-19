@@ -1,8 +1,10 @@
 <?php
 namespace Netopia\Netcard\Mobilpay\Payment\Request;
 
-use \Netopia\Netcard\Mobilpay\Payment\Product\Mobilpay_Payment_Product_Code;
-class Mobilpay_Payment_Request_Info extends Mobilpay_Payment_Request_Abstract
+use \Netopia\Netcard\Mobilpay\Payment\Product\MobilpayPaymentProductCode;
+use \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestAbstract;
+
+class MobilpayPaymentRequestInfo extends MobilpayPaymentRequestAbstract
 {
     const ERROR_LOAD_FROM_XML_PRODUCT_CODE_MISSING = 0x30000001;
 
@@ -23,10 +25,10 @@ class Mobilpay_Payment_Request_Info extends Mobilpay_Payment_Request_Abstract
         $elems = $elem->getElementsByTagName('product_code');
         if ($elems->length != 1)
         {
-            throw new Exception('Mobilpay_Payment_Request_Info::loadFromXml failed; product element is missing', self::ERROR_LOAD_FROM_XML_PRODUCT_CODE_MISSING);
+            throw new Exception('MobilpayPaymentRequestInfo::loadFromXml failed; product element is missing', self::ERROR_LOAD_FROM_XML_PRODUCT_CODE_MISSING);
         }
 
-        $this->product = new Mobilpay_Payment_Product_Code($elems->item(0));
+        $this->product = new MobilpayPaymentProductCode($elems->item(0));
 
         return $this;
     }
@@ -34,7 +36,7 @@ class Mobilpay_Payment_Request_Info extends Mobilpay_Payment_Request_Abstract
     protected function _prepare ()
     {
 
-        if (is_null($this->signature) || ! ($this->product instanceof Mobilpay_Payment_Product_Code) || ! $this->orderId)
+        if (is_null($this->signature) || ! ($this->product instanceof MobilpayPaymentProductCode) || ! $this->orderId)
         {
             throw new Exception('One or more mandatory properties are invalid!', self::ERROR_PREPARE_MANDATORY_PROPERTIES_UNSET);
         }

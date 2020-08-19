@@ -1,15 +1,17 @@
 <?php
 namespace Netopia\Netcard\Mobilpay\Payment\Request;
-include_once ('Abstract.php');
+
+use \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestAbstract;
+// include_once ('Abstract.php');
 /**
- * Class Mobilpay_Payment_Request_Sms
+ * Class MobilpayPaymentRequestSms
  * This class can be used for accessing mobilpay.ro payment interface for your configured online services
  * @copyright NETOPIA
  * @author Claudiu Tudose
  * @version 1.0
  *
  */
-class Mobilpay_Payment_Request_Sms extends Mobilpay_Payment_Request_Abstract
+class MobilpayPaymentRequestSms extends MobilpayPaymentRequestAbstract
 {
 	const ERROR_LOAD_FROM_XML_SERVICE_ELEM_MISSING		= 0x31000001;
 	/**
@@ -34,7 +36,7 @@ class Mobilpay_Payment_Request_Sms extends Mobilpay_Payment_Request_Abstract
 		$elems = $elem->getElementsByTagName('service');
 		if($elems->length != 1)
 		{
-			throw new Exception('Mobilpay_Payment_Request_Sms::loadFromXml failed: service is missing', self::ERROR_LOAD_FROM_XML_SERVICE_ELEM_MISSING);
+			throw new Exception('MobilpayPaymentRequestSms::loadFromXml failed: service is missing', self::ERROR_LOAD_FROM_XML_SERVICE_ELEM_MISSING);
 		}
 		$xmlElem = $elems->item(0);
 		$this->service = $xmlElem->nodeValue;
@@ -61,17 +63,17 @@ class Mobilpay_Payment_Request_Sms extends Mobilpay_Payment_Request_Abstract
 
         if(!isset($reqParams['signature']))
         {
-        	throw new Exception('Mobilpay_Payment_Request_Sms::loadFromQueryString failed: signature is missing', self::ERROR_LOAD_FROM_XML_SIGNATURE_ELEM_MISSING);
+        	throw new Exception('MobilpayPaymentRequestSms::loadFromQueryString failed: signature is missing', self::ERROR_LOAD_FROM_XML_SIGNATURE_ELEM_MISSING);
         }
         $this->signature = $reqParams['signature'];
         if(!isset($reqParams['service']))
         {
-        	throw new Exception('Mobilpay_Payment_Request_Sms::loadFromQueryString failed: service is missing', self::ERROR_LOAD_FROM_XML_SERVICE_ELEM_MISSING);
+        	throw new Exception('MobilpayPaymentRequestSms::loadFromQueryString failed: service is missing', self::ERROR_LOAD_FROM_XML_SERVICE_ELEM_MISSING);
         }
         $this->service = $reqParams['service'];
         if(!isset($reqParams['tran_id']))
         {
-        	throw new Exception('Mobilpay_Payment_Request_Sms::loadFromQueryString failed: empty order id', self::ERROR_LOAD_FROM_XML_ORDER_ID_ATTR_MISSING);
+        	throw new Exception('MobilpayPaymentRequestSms::loadFromQueryString failed: empty order id', self::ERROR_LOAD_FROM_XML_ORDER_ID_ATTR_MISSING);
         }
         $this->orderId = $reqParams['tran_id'];
         if(isset($reqParams['timestamp']))

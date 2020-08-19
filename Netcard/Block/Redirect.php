@@ -5,9 +5,16 @@
  */
 namespace Netopia\Netcard\Block;
 use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Sales\Model\Order;
+use Magento\Quote\Model\QuoteFactory;
+use Magento\Framework\Module\Dir\Reader;
+use Magento\Framework\App\ObjectManager;
 use Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice;
 use Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard;
-use \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress;
+use Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress;
 use Magento\Framework\Module\Dir;
 
 /**
@@ -26,36 +33,36 @@ class Redirect extends Template
     Protected $quoteFactory;
 
     /**
-     * @var \Netopia\Netcard\Mobilpay\Payment\Request\MobilpayPaymentRequestCard
+     * @var MobilpayPaymentRequestCard
      */
     Protected $mobilpayPaymentRequestCard;
     /**
-     * @var \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentInvoice
+     * @var MobilpayPaymentInvoice
      */
     Protected $mobilpayPaymentInvoice;
     /**
-     * @var \Netopia\Netcard\Mobilpay\Payment\MobilpayPaymentAddress
+     * @var Payment\MobilpayPaymentAddress
      */
     Protected $mobilpayPaymentAddress;
 
     /**
      * Redirect constructor.
      *
-     * @param Template\Context $context
-     * @param \Magento\Checkout\Model\Session $session
-     * @param \Magento\Framework\App\ResourceConnection $resource
-     * @param \Magento\Sales\Model\Order $orderFactory
-     * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
-     * @param \Magento\Framework\Module\Dir\Reader $reader
+     * @param Context $context
+     * @param Session $session
+     * @param ResourceConnection $resource
+     * @param Order $orderFactory
+     * @param QuoteFactory $quoteFactory
+     * @param Reader $reader
      * @param array $data
      */
     public function __construct(
-                                \Magento\Framework\View\Element\Template\Context $context,
-                                \Magento\Checkout\Model\Session $session,
-                                \Magento\Framework\App\ResourceConnection $resource,
-                                \Magento\Sales\Model\Order $orderFactory,
-                                \Magento\Quote\Model\QuoteFactory $quoteFactory,
-                                \Magento\Framework\Module\Dir\Reader $reader,
+                                Context $context,
+                                Session $session,
+                                ResourceConnection $resource,
+                                Order $orderFactory,
+                                QuoteFactory $quoteFactory,
+                                Reader $reader,
                                 array $data)
     {
         $this->_resource = $resource;
@@ -73,8 +80,8 @@ class Redirect extends Template
         $tblQuoteIdMask = $this->_resource->getTableName('quote_id_mask');
         $quoteId = $this->getRequest()->getParam('quote');
 
-        /** @var \Magento\Framework\App\ObjectManager $ */
-        $obm = \Magento\Framework\App\ObjectManager::getInstance();
+        /** @var ObjectManager $ */
+        $obm = ObjectManager::getInstance();
 
         /** @var \Magento\Framework\App\Http\Context $context */
         $context = $obm->get('Magento\Framework\App\Http\Context');
