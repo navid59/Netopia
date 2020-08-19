@@ -1,12 +1,10 @@
 <?php
 namespace Netopia\Netcard\Controller\Payment;
 
-use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\View\Result\PageFactory;
-use Magento\Framework\App\Request\InvalidRequestException;
 
 use Magento\Sales\Model\Order;
 use Magento\Framework\DataObject;
@@ -14,7 +12,7 @@ use Magento\Framework\DataObject;
 use Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Abstract;
 use Netopia\Netcard\Mobilpay\Payment\Request\Mobilpay_Payment_Request_Info;
 
-class Ipn extends Action implements CsrfAwareActionInterface {
+class Ipn extends Action {
     /**
      * @var PageFactory
      */
@@ -60,45 +58,35 @@ class Ipn extends Action implements CsrfAwareActionInterface {
      */
     public function execute()
     {
-        $this->setLog('Ipn Execute');
         $objPmReq = $this->_processRequest();
+//	echo "<pre>"; 
+//	var_dump($objPmReq);die('2');
+//        echo "</pre>";	
+       ///////////////////////
+//        ob_start();
+//        var_dump($GLOBALS);
+//        $data = ob_get_clean();
+//        $fp = fopen("/var/www/html/var/log/ipn.log", "w");
+//        fwrite($fp, $data);
+//        fclose($fp);
+        ///////////////////////
 
-        if(!$objPmReq) { 
-           $this->setLog('Is not send data By Post');
+        if(!$objPmReq)
             die('Please post your data');
-        }
-
         try
         {
-           $this->setLog(' | Ipn Try');
            if ($objPmReq instanceof Mobilpay_Payment_Request_Info)
             {
-                $this->setLog(' | Ipn Try Case 1');
                 $this->_processRequestProduct($objPmReq);
             } else
             {
-                $this->setLog(' | Ipn Try Case 2');
                 $this->_processNotification($objPmReq);
             }
         } catch (\Exception $e)
         {
-            $this->setLog(' | Ipn Exception Case 3');
+
             $this->_sendResponse(Mobilpay_Payment_Request_Abstract::CONFIRM_ERROR_TYPE_TEMPORARY, $e->getCode()+100, $e->getMessage());
         }
-    }
-
-    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
-    {
-        return null;
-    }
-
-    public function validateForCsrf(RequestInterface $request): ?bool
-    {
-        return true;
-    }
-    
-    public function setLog($log) {
-   	 file_put_contents('/var/www/html/var/log/ipnLog.log', $log.' ||| ', FILE_APPEND | LOCK_EX);
     }
 
     protected function _processRequestProduct($objPmReq)
@@ -124,6 +112,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
 
     protected function _processNotification($objPmReq)
     {
+
         $errorCode = 0;
         $errorType = Mobilpay_Payment_Request_Abstract::CONFIRM_ERROR_TYPE_NONE;
         $errorMessage = '';
@@ -399,7 +388,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
 
     private function _processRequest ()
     {
-        $this->setLog('Get Response');
+
         error_reporting(E_ALL);
         $objPmReq = false;
         $request = $this->getRequest();
@@ -407,7 +396,6 @@ class Ipn extends Action implements CsrfAwareActionInterface {
         {
             $envKey = $request->getParam('env_key', false);
             $envData = $request->getParam('data', false);
-       
 
             if ($envKey && $envData)
             {

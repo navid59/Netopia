@@ -119,8 +119,13 @@ class Redirect extends Template
 //            echo ($objPmReqCard->orderId);
 //            die('www');
             $objPmReqCard->returnUrl = $this->getUrl('netopia/payment/success');
-            $objPmReqCard->confirmUrl = $this->getUrl('netopia/payment/ipn/');
+            $objPmReqCard->confirmUrl = $this->getUrl('netopia/payment/ipn');
 //            $objPmReqCard->cancelUrl = $this->getUrl('netopia/magenpayment/cancel');
+
+            $this->setLog($objPmReqCard->returnUrl);
+            $this->setLog($objPmReqCard->confirmUrl);
+            
+            
 
             // Add invoice info to Obj
             $objPmReqCard->invoice = new MobilpayPaymentInvoice();
@@ -180,5 +185,9 @@ class Redirect extends Template
     {
         $str = 'payment/net_card/'.$field;
         return $this->_scopeConfig->getValue($str);
+    }
+
+    public function setLog($log) {
+        file_put_contents('/var/www/html/var/log/requestLog.log', $log.' <<<>>> ', FILE_APPEND | LOCK_EX);
     }
 }
