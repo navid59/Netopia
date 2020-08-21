@@ -110,8 +110,7 @@ class Redirect extends Template
         $shipping = $this->getOrder()->getShippingAddress();
         $billing = $this->getOrder()->getBillingAddress();
         $order = $this->getOrder();
-        echo $order->getId();
-        //die('jahsdkjsa');
+        // echo $order->getId();
         //var_dump($order);
         $result = [];
 
