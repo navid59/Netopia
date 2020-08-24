@@ -26,9 +26,6 @@
             <!--/ko-->
         </div>
 
-        <div class="payment-method-fast-qrcode">
-            <img src="https://secure.mobilpay.ro/default/index/qr/id/1112193/type/3" alt="Netopia fast payment - QR>"/>
-        </div>
         <hr>
         <div class="field required">
             <label data-bind="attr: {for: getCode() + '_transaction_result'}" class="label">
@@ -46,6 +43,12 @@
                     <input class="form-check-input" type="radio" name="paymentMethod" id="cryptoPayment" value="crypto" disabled>
                     <label class="form-check-label" for="cryptoPayment">
                         <!-- ko i18n: 'crypto payment'--><!-- /ko -->
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="cardPayment" value="qrcode">
+                    <label class="form-check-label" for="cardPayment">
+                        <!-- ko i18n: 'qr payemnt'--><!-- /ko -->
                     </label>
                 </div>
             </div>

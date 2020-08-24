@@ -24,6 +24,7 @@ class Netcard extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_isOffline = true;
 
     public function getOrderPlaceRedirectUrl(){
-        return 'netopia/payment/redirect';
+        // return 'netopia/payment/redirect';
+        return 'netopia/payment/qrcode';
     }
 }
