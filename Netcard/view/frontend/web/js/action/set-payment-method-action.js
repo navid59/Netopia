@@ -12,8 +12,20 @@ define(
     function ($, quote, urlBuilder, storage, errorProcessor, customer, fullScreenLoader) {
         'use strict';
         return function (messageContainer) {
-            // $.mage.redirect('http://www.mdir.eu'); //My Url, regarding Route
-            $.mage.redirect('../netopia/payment/redirect/quote/' + quote.getQuoteId()); //My Url, regarding Route
+            if($('#qrcodePayment').is(':checked')) 
+                { 
+                    console.log('qrcode is checked');
+                    $.mage.redirect('../netopia/payment/qrcode/quote/' + quote.getQuoteId()); // Redirect to QrCode
+
+                } else if($('#cardPayment').is(':checked')) 
+                {
+                    console.log('cardPayment is checked');
+                    $.mage.redirect('../netopia/payment/redirect/quote/' + quote.getQuoteId()); // Redirect to SANDBOX 
+                } else
+                {
+                    console.log('Someother Method is selected as defulte');
+                }         
+            
         };
     }
 );
