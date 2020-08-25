@@ -57,6 +57,7 @@ class Qrcode extends Template
      * @param QuoteFactory $quoteFactory
      * @param Reader $reader
      * @param array $data
+
      */
     public function __construct(
                                 Context $context,
@@ -123,45 +124,88 @@ class Qrcode extends Template
     try {
         $data =
                 [
-                    'account' => ['id' => $this->getConfigData('auth/signature')],
+                    // 'login' => [
+                    //     'username' => 'navid',
+                    //     'password' =>  'tamasba118'
+                    // ],
+                    'account' => [
+                        'id' => $this->getConfigData('auth/signature'),
+                        'user_name' => 'navid',
+                        'confirm_url' => 'http://35.204.43.65/netopia/payment/ipn',
+                        // 'return3d_url' => 'http://35.204.43.65/netopia/payment/success',
+                        'hash' => '',
+                        ],
                     'platform' => 4,
-                    "order" => [
-                        "amount" => $order->getBaseGrandTotal(),
-                        "id" => $order->getId(),
-                        "currency" => $order->getBaseCurrencyCode(),
-                        "description" => "this is for QrCodetest",
-                        "billing" => [
-                            "address" => implode(', ', $billing->getStreet()).', '.
+                    'order' => [
+                        'amount' => $order->getBaseGrandTotal(),
+                        'id' => $order->getId(),
+                        'currency' => $order->getBaseCurrencyCode(),
+                        'description' => 'this is for QrCodetest',
+                        'billing' => [
+                            'address' => implode(', ', $billing->getStreet()).', '.
                                                        $billing->getPostcode().', '.
                                                        $billing->getRegion(),
-                            "first_name" => $billing->getFirstname(),
-                            "last_name" => $billing->getLastname(),
-                            "email" => $billing->getEmail(),
-                            "phone" => $billing->getTelephone(),
-                            "city" => $billing->getCity()
-                        ]
-                    ]
+                            'first_name' => $billing->getFirstname(),
+                            'last_name' => $billing->getLastname(),
+                            'email' => $billing->getEmail(),
+                            'phone' => $billing->getTelephone(),
+                            'city' => $billing->getCity()
+                        ],
+                    ],
                 ];
 
-            $params = \Safe\json_encode($data);
-            $url = "https://api.mobilpay.com/payment/";
-            $xntpUser = 'navid';
-            $xntpPassword = 'tamasba118';
-            $this->_curl->setCredentials($xntpUser, $xntpPassword);
-            $this->_curl->addHeader("Content-Type", "application/json");
-            $this->_curl->addHeader("x-ntp-user", $xntpUser);
-            $this->_curl->addHeader("x-ntp-password", $xntpPassword);
-            $this->_curl->setOption(CURLOPT_RETURNTRANSFER, true);
-            $this->_curl->post($url, $params);
-            $response = $this->_curl->getBody();
-            //var_dump(\Safe\json_decode($response));
-            $response = \Safe\json_decode($response);
+            // $params = \Safe\json_encode($data);
+            // $url = "https://api.mobilpay.com/payment/";
+            // $xntpUser = 'navid';
+            // $xntpPassword = 'tamasba118';
+            // $this->_curl->setCredentials($xntpUser, $xntpPassword);
+            // $this->_curl->addHeader("Content-Type", "application/json");
+            // $this->_curl->addHeader("x-ntp-user", $xntpUser);
+            // $this->_curl->addHeader("x-ntp-password", $xntpPassword);
+            // $this->_curl->setOption(CURLOPT_RETURNTRANSFER, true);
+            // $this->_curl->post($url, $params);
+            // $response = $this->_curl->getBody();
+            // //var_dump(\Safe\json_decode($response));
+            // $response = \Safe\json_decode($response);
+
+            $request = \Safe\json_decode(\Safe\json_encode($data), FALSE);
+            $request->order->amount = round($request->order->amount,2);
+            $this->setLog("MPYAPI request, data is:".print_r($request,1));
+            $pass = 'tamasba118';
+            $string = strtoupper(md5($pass)).$request->order->id.$request->order->amount.$request->order->currency.$request->account->id;
+            $request->account->hash = strtoupper(sha1($string));
 
 
-        }catch (\Exception $exception) {
-           //
+            $this->setLog("MPYAPI SOAP string is '$string' request is:".print_r($request,1));
+            $wsdl = 'https://sandboxsecure.mobilpay.ro/api/payment2/?wsdl';
+
+            if(isset($data['platform']) && intval($data['platform'])==3)
+            {$wsdl = 'https://secure.mobilpay.ro/api/payment2/?wsdl';}
+
+
+            $this->setLog("MPYAPI sending request to $wsdl");
+
+            $client = new \SoapClient($wsdl, array(
+                'soap_version' => SOAP_1_1,
+                'trace' => true,
+                'exceptions' => true,
+                'style' => SOAP_RPC,
+                'use' => SOAP_ENCODED,
+                ));
+            $msg = "ok";
+            $code = 0;
+            $params = new \StdClass;
+            $params->request = $request;
+
+
+            $this->setLog(print_r($params,1));
+            $response = $client->doPay($params);
+            $this->setLog("response is");
+            $this->setLog(print_r($response,1));
+        } catch (\Exception $exception) {
+           $response = $exception->error_reporting();
         }
-        return($response);
+        return($response->doPayResult);
     }
 
     public function getConfigData($field)

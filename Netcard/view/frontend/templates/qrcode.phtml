@@ -2,7 +2,9 @@
     /* @var Netopia\Netcard\Block\Qrcode $block */
     $quote = $block->getQuote();
     $qrcodeDta = $block->getQrcodeData();
-
+    echo "<pre>";
+    print_r($qrcodeDta);
+echo "</pre>";
 
     if($qrcodeDta->errors->code === "0") {
        ?>
@@ -17,12 +19,12 @@
             ?>
             <div class="">
                 <img 
-                    src="https://secure.mobilpay.ro/default/index/qr/id/<?=$qrcodeDta->transaction->id;?>/type/<?=$qrcodeDta->platform;?>"
+                    src="https://secure.mobilpay.ro/default/index/qr/id/<?=$qrcodeDta->transaction->id;?>/type/4"
                     alt="Qrcode mobilpay WALLET">
             </div>
             <?php
         }
-    }else {
+    } else {
         echo '<div class="">
                     <img src="https://suport.mobilpay.ro/np-logo-blue.svg" width="134" alt="Netopia Payment>"/>
                     <h1 class="">
@@ -33,5 +35,7 @@
         //           echo ('<h2><b>'.$value->message. '</b> : ' .$value->code.'</h2>');
         //       }      
     }
+
+
 
 ?>
