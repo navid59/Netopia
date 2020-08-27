@@ -108,7 +108,7 @@ class Qrcode extends Template
     }
 
 
-    // Get QrCode 
+    // Get QrCode
     public function getQrcodeData()
     {
     $e = null;
@@ -120,19 +120,14 @@ class Qrcode extends Template
             'message' => '',
             'transactionId' => ''
         ];
-    
+
     try {
         $data =
                 [
-                    // 'login' => [
-                    //     'username' => 'navid',
-                    //     'password' =>  'tamasba118'
-                    // ],
                     'account' => [
                         'id' => $this->getConfigData('auth/signature'),
-                        'user_name' => 'navid',
+                        'user_name' => $this->getConfigData('auth/username'),
                         'confirm_url' => 'http://35.204.43.65/netopia/payment/ipn',
-                        // 'return3d_url' => 'http://35.204.43.65/netopia/payment/success',
                         'hash' => '',
                         ],
                     'platform' => 4,
@@ -154,24 +149,10 @@ class Qrcode extends Template
                     ],
                 ];
 
-            // $params = \Safe\json_encode($data);
-            // $url = "https://api.mobilpay.com/payment/";
-            // $xntpUser = 'navid';
-            // $xntpPassword = 'tamasba118';
-            // $this->_curl->setCredentials($xntpUser, $xntpPassword);
-            // $this->_curl->addHeader("Content-Type", "application/json");
-            // $this->_curl->addHeader("x-ntp-user", $xntpUser);
-            // $this->_curl->addHeader("x-ntp-password", $xntpPassword);
-            // $this->_curl->setOption(CURLOPT_RETURNTRANSFER, true);
-            // $this->_curl->post($url, $params);
-            // $response = $this->_curl->getBody();
-            // //var_dump(\Safe\json_decode($response));
-            // $response = \Safe\json_decode($response);
-
             $request = \Safe\json_decode(\Safe\json_encode($data), FALSE);
             $request->order->amount = round($request->order->amount,2);
             $this->setLog("MPYAPI request, data is:".print_r($request,1));
-            $pass = 'tamasba118';
+            $pass = $this->getConfigData('auth/password');
             $string = strtoupper(md5($pass)).$request->order->id.$request->order->amount.$request->order->currency.$request->account->id;
             $request->account->hash = strtoupper(sha1($string));
 

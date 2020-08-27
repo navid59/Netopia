@@ -10,22 +10,22 @@
                 <span class="" >Please, scan the "Qr Code" with your Mobilpay WALLET</span>
             </h1>
         </div>
-        <?php 
-        if(isset($qrcodeDta->transaction->id)) {            
+        <?php
+        if(isset($qrcodeDta->transaction->id)) {
             ?>
             <div id="orderId"  data-order=<?php echo $qrcodeDta->order->id ?>>
                 <div>
-                    <img 
+                    <img
                         src="https://secure.mobilpay.ro/default/index/qr/id/<?=$qrcodeDta->transaction->id;?>/type/4"
                         alt="Qrcode mobilpay WALLET">
                 </div>
                 <div class="">
                     <p>
-                        <span id="orderStatus">xxxx</span>
+                        <span id="orderStatus"></span>
                     </p>
                 </div>
             </div>
-            <script> 
+            <script>
             window.onload = (event) => {
               //console.log('page is fully loaded');
               console.log( "Timer Start" );
@@ -36,7 +36,7 @@
                         console.log('oooooo')
                        if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("orderStatus").innerHTML = this.responseText;
-                        } 
+                        }
                     };
                     xmlhttp.open("GET", "http://35.204.43.65/netopia/payment/status?id=" + orderId, true);
                     xmlhttp.send();
@@ -55,7 +55,7 @@
               </div>';
         // foreach ($imgQrcode->errors->details->item as $key => $value) {
         //           echo ('<h2><b>'.$value->message. '</b> : ' .$value->code.'</h2>');
-        //       }      
+        //       }
     }
 
 
