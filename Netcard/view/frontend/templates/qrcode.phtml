@@ -3,30 +3,37 @@
     $quote = $block->getQuote();
     $qrcodeDta = $block->getQrcodeData();
     $platform = $block->getConfigData('mode/is_live') ? 3 : 4;
-    $BaseUrl = $block->getBaseUrl();
+    
     if($qrcodeDta->errors->code === "0") {
        ?>
         <div class="" >
             <img src="https://suport.mobilpay.ro/np-logo-blue.svg" width="134" alt="Netopia Payment>"/>
             <h1 class="">
-                <span class="" >Please, scan the "Qr Code" with your Mobilpay WALLET</span>
+                <span class="" ><?= __('Please, scan the "Qr Code" with your Mobilpay WALLET') ?></span>
             </h1>
         </div>
         <?php
         if(isset($qrcodeDta->transaction->id)) {
             ?>
-            <div id="orderId"  data-order=<?php echo $qrcodeDta->order->id ?>>
-                <div>
-                    <img
-                        src="https://secure.mobilpay.ro/default/index/qr/id/<?=$qrcodeDta->transaction->id;?>/type/<?=$platform;?>"
-                        alt="Qrcode mobilpay WALLET">
+            
+                <div class="" id="orderId"  data-order=<?php echo $qrcodeDta->order->id ?>>
+                    <img    src="https://secure.mobilpay.ro/default/index/qr/id/<?=$qrcodeDta->transaction->id;?>/type/<?=$platform;?>"
+                            alt="Qrcode mobilpay WALLET"
+                            width="200" height="200">
                 </div>
-                <div class="">
-                    <p>
-                        <span id="orderStatus"></span>
-                    </p>
+                <div class="title">
+                    <span class="title">Your order status : <strong><span id="orderStatus">-</span></strong></span>
                 </div>
-            </div>
+                <div id="orderSummery" style="display: none;">
+                    <span class="title">Your order number : <strong><?=$qrcodeDta->order->id;?></strong></span>
+                    <span class="title">Your total paid ampunt : <strong><?=$qrcodeDta->order->amount;?> <?=$qrcodeDta->order->currency;?></strong></span>
+                    <div class="actions-toolbar">
+                        <div class="primary">
+                            <a class="action primary continue" href="<?php /* @escapeNotVerified */ echo $block->getUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span></a>
+                        </div>
+                    </div>
+                </div>
+            
             <script>
             window.onload = (event) => {
               //console.log('page is fully loaded');
@@ -38,6 +45,9 @@
                         console.log('oooooo')
                        if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("orderStatus").innerHTML = this.responseText;
+                            if (this.responseText == "complete") {
+                                document.getElementById("orderSummery").style.display = "block";
+                            }
                         }
                     };
                     xmlhttp.open("GET", window.location.origin + "/netopia/payment/status?id=" + orderId, true);

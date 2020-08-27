@@ -45,15 +45,15 @@
                         <label>Payment Action</label>
                         <source_model>Netopia\Netcard\Model\Adminhtml\Source\PaymentAction</source_model>
                     </field>
-                    <field id="card_payment" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="card_payment" translate="label" type="select" sortOrder="40" showInDefault="0" showInWebsite="1" showInStore="0">
                         <label>Allow Card Payment</label>
                         <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                     </field>
-                    <field id="qr_payment" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="qr_payment" translate="label" type="select" sortOrder="45" showInDefault="0" showInWebsite="1" showInStore="0">
                         <label>Allow mobilPay WALLET Payment</label>
                         <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                     </field>
-                    <field id="crypto_payment" translate="label" type="select"  sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="crypto_payment" translate="label" type="select"  sortOrder="50" showInDefault="0" showInWebsite="1" showInStore="0">
                         <label>Allow Crypto Payment</label>
                         <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                     </field>
