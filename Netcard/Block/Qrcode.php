@@ -127,10 +127,10 @@ class Qrcode extends Template
                     'account' => [
                         'id' => $this->getConfigData('auth/signature'),
                         'user_name' => $this->getConfigData('auth/username'),
-                        'confirm_url' => 'http://35.204.43.65/netopia/payment/ipn',
+                        'confirm_url' => $this->getUrl('netopia/payment/ipn'),
                         'hash' => '',
                         ],
-                    'platform' => 4,
+                    'platform' => $this->getConfigData('mode/is_live') ? 3 : 4,
                     'order' => [
                         'amount' => $order->getBaseGrandTotal(),
                         'id' => $order->getId(),

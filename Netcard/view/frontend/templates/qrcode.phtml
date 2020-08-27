@@ -2,6 +2,8 @@
     /* @var Netopia\Netcard\Block\Qrcode $block */
     $quote = $block->getQuote();
     $qrcodeDta = $block->getQrcodeData();
+    $platform = $block->getConfigData('mode/is_live') ? 3 : 4;
+    $BaseUrl = $block->getBaseUrl();
     if($qrcodeDta->errors->code === "0") {
        ?>
         <div class="" >
@@ -13,10 +15,10 @@
         <?php
         if(isset($qrcodeDta->transaction->id)) {
             ?>
-            <div id="orderId"  data-order=<?php echo $qrcodeDta->order->id ?>>
+            <div id="orderId"  data-order=<?php echo $qrcodeDta->order->id ?> data-link=<?php echo $BaseUrl ?>>
                 <div>
                     <img
-                        src="https://secure.mobilpay.ro/default/index/qr/id/<?=$qrcodeDta->transaction->id;?>/type/4"
+                        src="https://secure.mobilpay.ro/default/index/qr/id/<?=$qrcodeDta->transaction->id;?>/type/<?=$platform;?>"
                         alt="Qrcode mobilpay WALLET">
                 </div>
                 <div class="">
@@ -32,13 +34,14 @@
               setInterval(function () {
                     var xmlhttp = new XMLHttpRequest();
                     let orderId = document.getElementById('orderId').getAttribute('data-order');
+                    let baseUrl = document.getElementById('orderId').getAttribute('data-link');
                     xmlhttp.onreadystatechange = function() {
                         console.log('oooooo')
                        if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("orderStatus").innerHTML = this.responseText;
                         }
                     };
-                    xmlhttp.open("GET", "http://35.204.43.65/netopia/payment/status?id=" + orderId, true);
+                    xmlhttp.open("GET", baseUrl + "/netopia/payment/status?id=" + orderId, true);
                     xmlhttp.send();
                 }, 5000);
              };
