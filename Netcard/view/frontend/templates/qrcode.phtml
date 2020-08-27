@@ -15,7 +15,7 @@
         <?php
         if(isset($qrcodeDta->transaction->id)) {
             ?>
-            <div id="orderId"  data-order=<?php echo $qrcodeDta->order->id ?> data-link=<?php echo $BaseUrl ?>>
+            <div id="orderId"  data-order=<?php echo $qrcodeDta->order->id ?>>
                 <div>
                     <img
                         src="https://secure.mobilpay.ro/default/index/qr/id/<?=$qrcodeDta->transaction->id;?>/type/<?=$platform;?>"
@@ -34,14 +34,13 @@
               setInterval(function () {
                     var xmlhttp = new XMLHttpRequest();
                     let orderId = document.getElementById('orderId').getAttribute('data-order');
-                    let baseUrl = document.getElementById('orderId').getAttribute('data-link');
                     xmlhttp.onreadystatechange = function() {
                         console.log('oooooo')
                        if (this.readyState == 4 && this.status == 200) {
                             document.getElementById("orderStatus").innerHTML = this.responseText;
                         }
                     };
-                    xmlhttp.open("GET", baseUrl + "/netopia/payment/status?id=" + orderId, true);
+                    xmlhttp.open("GET", window.location.origin + "/netopia/payment/status?id=" + orderId, true);
                     xmlhttp.send();
                 }, 5000);
              };
