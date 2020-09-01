@@ -151,20 +151,16 @@ class Qrcode extends Template
 
             $request = \Safe\json_decode(\Safe\json_encode($data), FALSE);
             $request->order->amount = round($request->order->amount,2);
-            $this->setLog("MPYAPI request, data is:".print_r($request,1));
+            
             $pass = $this->getConfigData('auth/password');
             $string = strtoupper(md5($pass)).$request->order->id.$request->order->amount.$request->order->currency.$request->account->id;
             $request->account->hash = strtoupper(sha1($string));
 
-
-            $this->setLog("MPYAPI SOAP string is '$string' request is:".print_r($request,1));
             $wsdl = 'https://sandboxsecure.mobilpay.ro/api/payment2/?wsdl';
 
             if(isset($data['platform']) && intval($data['platform'])==3)
             {$wsdl = 'https://secure.mobilpay.ro/api/payment2/?wsdl';}
 
-
-            $this->setLog("MPYAPI sending request to $wsdl");
 
             $client = new \SoapClient($wsdl, array(
                 'soap_version' => SOAP_1_1,
@@ -177,12 +173,7 @@ class Qrcode extends Template
             $code = 0;
             $params = new \StdClass;
             $params->request = $request;
-
-
-            $this->setLog(print_r($params,1));
             $response = $client->doPay($params);
-            $this->setLog("response is");
-            $this->setLog(print_r($response,1));
         } catch (\Exception $exception) {
            $response = $exception->error_reporting();
         }

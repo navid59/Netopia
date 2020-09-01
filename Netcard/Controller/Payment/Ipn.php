@@ -300,12 +300,9 @@ class Ipn extends Action implements CsrfAwareActionInterface {
             $transaction,
             $this->_objPmReq->objPmNotify->errorMessage
         );
-        //$payment->setNotificationResult(true);
-        // $payment->setIsTransactionClosed(true);
+
         $payment->setIsTransactionClosed(0);
         $payment->save();
-        //$payment->registerPaymentReviewAction(Mage_Sales_Model_Order_Payment::REVIEW_ACTION_DENY, false);
-        //$this->_order->setStatus(Order::STATE_CANCELED);
         $this->_order->addStatusToHistory(Order::STATE_CANCELED, $this->_objPmReq->objPmNotify->errorMessage);
         $this->_order->save();
     }
@@ -385,13 +382,10 @@ class Ipn extends Action implements CsrfAwareActionInterface {
             $payment->setAmount($this->_objPmReq->objPmNotify->processedAmount);
 
         } else {
-
             $payment->setAmount($this->_objPmReq->objPmNotify->processedAmount);
             $payment->setTransactionId($this->_objPmReq->objPmNotify->purchaseId);
             $payment->setParentTransactionId($this->_objPmReq->objPmNotify->purchaseId);
             $payment->registerCaptureNotification($this->_objPmReq->objPmNotify->processedAmount);
-            //$this->_order->sendNewOrderEmail(":f");
-
         }
         $trans = $this->_builderInterface;
         $transaction = $trans->setPayment($payment)

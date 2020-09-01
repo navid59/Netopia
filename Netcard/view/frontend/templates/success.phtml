@@ -1,23 +1,26 @@
 <?php /* @var Netopia\Netcard\Block\Success $block */ ?>
+<?php 
+    $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+    $orderData = $objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId($block->getOrderId());
+    $msg = $orderData['status'] == "canceled" ? "Sorry, You order is canceled!" : "You are successfully paid!";
+    
+?>
+<hr>
 <div class="page-title-wrapper">
     <img src="https://suport.mobilpay.ro/np-logo-blue.svg" width="134" alt="Netopia Payment>"/>
     <h1 class="page-title">
-        <span class="base" data-ui-id="page-title-wrapper">You are successfully paid!</span>    </h1>
+        <span class="base" data-ui-id="page-title-wrapper"><?php echo $msg; ?></span>
+    </h1>
 </div>
-<!--<hr>-->
-<?php
-//echo "<pre>";
-//var_dump($block->getOrderId());
-$objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
-$orderData = $objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId($block->getOrderId());
-//          echo print_r($orderData->getData());
-//         echo var_dump($orderData->getData('shipping_description')); //shipping_description
-//echo "</pre>";
-?>
-<hr>
 <div class="checkout-success">
-    <p>Your order number : <strong><?php echo $block->getOrderId();?></strong></p>
-    <p>Your total paid ampunt : <strong><?php echo $orderData->getData('base_grand_total');?></strong></p>
+    <?php 
+        if ($orderData['status'] != "canceled") {
+            ?>
+            <p>Your order number : <strong><?php echo $block->getOrderId();?></strong></p>
+            <p>Your total paid ampunt : <strong><?php echo $orderData->getData('base_grand_total');?></strong></p>
+            <?php
+        }
+    ?>
     <div class="actions-toolbar">
         <div class="primary">
             <a class="action primary continue" href="<?php /* @escapeNotVerified */ echo $block->getUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span></a>

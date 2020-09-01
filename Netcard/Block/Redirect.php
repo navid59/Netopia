@@ -110,8 +110,6 @@ class Redirect extends Template
         $shipping = $this->getOrder()->getShippingAddress();
         $billing = $this->getOrder()->getBillingAddress();
         $order = $this->getOrder();
-        // echo $order->getId();
-        //var_dump($order);
         $result = [];
 
         try {
@@ -122,16 +120,9 @@ class Redirect extends Template
             $x509FilePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR . "sandbox." . $objPmReqCard->signature . ".public.cer";
 
             $objPmReqCard->orderId = $this->getOrder()->getId();
-//            echo ($objPmReqCard->orderId);
-//            die('www');
             $objPmReqCard->returnUrl = $this->getUrl('netopia/payment/success');
             $objPmReqCard->confirmUrl = $this->getUrl('netopia/payment/ipn');
-//            $objPmReqCard->cancelUrl = $this->getUrl('netopia/magenpayment/cancel');
 
-            $this->setLog($objPmReqCard->returnUrl);
-            $this->setLog($objPmReqCard->confirmUrl);
-            
-            
 
             // Add invoice info to Obj
             $objPmReqCard->invoice = new MobilpayPaymentInvoice();
