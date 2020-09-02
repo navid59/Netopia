@@ -130,7 +130,7 @@ class Redirect extends Template
             $objPmReqCard->invoice->currency = $order->getBaseCurrencyCode();
             $objPmReqCard->invoice->amount = $order->getBaseGrandTotal();
 
-            $cart_description = $this->getConfigData('api/description');
+            $cart_description = $this->getConfigData('description');
             if ($cart_description != '') {
                 $objPmReqCard->invoice->details = $cart_description;
             } else {

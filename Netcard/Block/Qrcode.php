@@ -135,7 +135,7 @@ class Qrcode extends Template
                         'amount' => $order->getBaseGrandTotal(),
                         'id' => $order->getId(),
                         'currency' => $order->getBaseCurrencyCode(),
-                        'description' => 'this is for QrCodetest',
+                        'description' => $this->getConfigData('description') ? $this->getConfigData('description') : 'NETOPIA magento 2 - mobilPay WALLET',
                         'billing' => [
                             'address' => implode(', ', $billing->getStreet()).', '.
                                                        $billing->getPostcode().', '.
