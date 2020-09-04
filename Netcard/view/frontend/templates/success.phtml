@@ -2,10 +2,28 @@
 <?php 
     $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
     $orderData = $objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId($block->getOrderId());
-    $msg = $orderData['status'] == "canceled" ? "Sorry, You order is canceled!" : "You are successfully paid!";
-    
+    switch ($orderData['status']) {
+        case 'canceled':
+            $msg = "Sorry, Your order is canceled!";
+            break;
+        case 'complete':
+            $msg = "You are successfully paid!";
+            break;
+        case 'payment_review':
+            $msg = "Your payment is in reviewing!";
+            break;
+        case 'processing':
+            $msg = "Your order is in processing!";
+            break;
+        case 'fraud':
+            $msg = "Your order will not be processed!!!";
+            break;                    
+        default:
+            $msg = "!!!";
+            break;
+    }
+
 ?>
-<hr>
 <div class="page-title-wrapper">
     <img src="https://suport.mobilpay.ro/np-logo-blue.svg" width="134" alt="Netopia Payment>"/>
     <h1 class="page-title">
@@ -14,16 +32,25 @@
 </div>
 <div class="checkout-success">
     <?php 
-        if ($orderData['status'] != "canceled") {
+        if (!in_array($orderData['status'], array("canceled", "fraud"))) {
             ?>
             <p>Your order number : <strong><?php echo $block->getOrderId();?></strong></p>
             <p>Your total paid ampunt : <strong><?php echo $orderData->getData('base_grand_total');?></strong></p>
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <a class="action primary continue" href="<?php /* @escapeNotVerified */ echo $block->getUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span></a>
+                </div>
+            </div>
+            <?php
+        } elseif($orderData['status'] == "canceled") {
+            ?>
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <a class="action primary continue" href="<?php /* @escapeNotVerified */ echo $block->getUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span></a>
+                </div>
+            </div>
             <?php
         }
     ?>
-    <div class="actions-toolbar">
-        <div class="primary">
-            <a class="action primary continue" href="<?php /* @escapeNotVerified */ echo $block->getUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span></a>
-        </div>
-    </div>
+    
 </div>
