@@ -42,14 +42,20 @@
                     var xmlhttp = new XMLHttpRequest();
                     let orderId = document.getElementById('orderId').getAttribute('data-order');
                     xmlhttp.onreadystatechange = function() {
-                        console.log('oooooo')
                        if (this.readyState == 4 && this.status == 200) {
-                            document.getElementById("orderStatus").innerHTML = this.responseText;
                             if (this.responseText == "complete") {
+                                document.getElementById("orderStatus").innerHTML = "is completed successfully";
                                 document.getElementById("orderSummery").style.display = "block";
                                 document.getElementById("continueShopping").style.display = "block";
                             }else if (this.responseText == "canceled"){
+                                document.getElementById("orderStatus").innerHTML = "is canceled";
                                 document.getElementById("continueShopping").style.display = "block";
+                            }else if (this.responseText == "payment_review"){
+                                document.getElementById("orderStatus").innerHTML = "is in payment review";
+                            }else if (this.responseText == "fraud"){
+                                document.getElementById("orderStatus").innerHTML = "will not be processed!!!";
+                            }else if (this.responseText == "processing"){
+                                document.getElementById("orderStatus").innerHTML = "Is in processing.(Scan the Qrcode to pay)";
                             }
                         }
                     };

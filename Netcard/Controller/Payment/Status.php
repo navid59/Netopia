@@ -38,10 +38,15 @@ class Status extends Action {
      */
     public function execute()
     {
-        $orderId = $_GET['id']; //Order Id
-        $order = $this->orderRepository->get($orderId);
-        $status = $order->getStatus();
-        echo $status;
-        
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $customerSession = $objectManager->get('Magento\Customer\Model\Session');
+        if($customerSession->isLoggedIn()) {
+            $orderId = $_GET['id']; //Order Id
+            $order = $this->orderRepository->get($orderId);
+            $status = $order->getStatus();
+            echo $status;
+        }else{
+            echo "access_denied";
+        }    
     }
 }
