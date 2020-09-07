@@ -77,38 +77,37 @@ class Ipn extends Action implements CsrfAwareActionInterface {
      */
     public function execute()
     {
-        $this->setLog('Ipn Execute');
         $objPmReq = $this->_processRequest();
 
         if(!$objPmReq) { 
-           $this->setLog('Is not send data By Post');
-            die('Please post your data');
+           die('Please post your data');
         }
 
         try
         {
-           $this->setLog(' | Ipn Try');
            if ($objPmReq instanceof MobilpayPaymentRequestInfo)
             {
-                $this->setLog(' | Ipn Try Case 1');
                 $this->_processRequestProduct($objPmReq);
             } else
             {
-                $this->setLog(' | Ipn Try Case 2');
                 $this->_processNotification($objPmReq);
             }
         } catch (\Exception $e)
         {
-            $this->setLog(' | Ipn Exception Case 3');
             $this->_sendResponse(MobilpayPaymentRequestAbstract::CONFIRM_ERROR_TYPE_TEMPORARY, $e->getCode()+100, $e->getMessage());
         }
     }
 
     
     public function setLog($log) {
-   	 file_put_contents('/var/www/html/var/log/ipnLog.log', $log.' ||| ', FILE_APPEND | LOCK_EX);
+     $logPoint = date(" - H:i:s - ").rand(1,1000)."\n";
+     ob_start();                    // start buffer capture
+     var_dump( $log );           // dump the values
+     $contents = ob_get_contents(); // put the buffer into a variable
+     ob_end_clean();
+   	 file_put_contents('/var/www/html/var/log/netopiaLog.log', $contents.' ||IPN|| '.$logPoint, FILE_APPEND | LOCK_EX);
     }
-
+    
     protected function _processRequestProduct($objPmReq)
     {
         header('Content-type: application/xml');
@@ -121,11 +120,8 @@ class Ipn extends Action implements CsrfAwareActionInterface {
 
         $this->_objPmReq = $objPmReq;
         $order_id = $objPmReq->orderId;
-
-//        $this->_order = $this->_orderFactory->load((int)$order_id); // Load not suported
         $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
-        $this->_order = $objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId((int)$order_id);
-
+        $this->_order = $objectManager->create('\Magento\Sales\Model\OrderRepository')->get($order_id);
         $this->_newOrderStatus = 'pending';
 
     }
@@ -139,14 +135,12 @@ class Ipn extends Action implements CsrfAwareActionInterface {
 
         switch ($objPmReq->objPmNotify->action) {
             case 'confirmed':
-            $this->setLog(' | confirmed');
                 if ($objPmReq->objPmNotify->errorCode == 0) {
                     $this->_handleCapture();
                 }
                 break;
 
             case 'confirmed_pending':
-            $this->setLog(' | confirmed_pending');
                 if ($objPmReq->objPmNotify->errorCode != 0) {
                     $this->_handlePaymentDenial();
                 } else {
@@ -155,7 +149,6 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 break;
 
             case 'paid_pending':
-            $this->setLog(' | paid_pending');
                 if ($objPmReq->objPmNotify->errorCode != 0) {
                     $this->_handlePaymentDenial();
                 } else {
@@ -164,7 +157,6 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 break;
 
             case 'paid':
-            $this->setLog(' | paid');
                 if ($objPmReq->objPmNotify->errorCode != 0) {
                     $this->_handlePaymentDenial();
                 } else {
@@ -175,7 +167,6 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 break;
 
             case 'canceled':
-            $this->setLog(' | canceled');
                 if ($objPmReq->objPmNotify->errorCode == 0) {
 
                     $this->_handleCancel();
@@ -183,7 +174,6 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 break;
 
             case 'credit':
-            $this->setLog(' | credit');
                 if ($objPmReq->objPmNotify->errorCode == 0) {
 
                     $this->_handleRefund();
@@ -232,10 +222,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
             ->setFailSafe(true)
             //build method creates the transaction and returns the object
             ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND);
-        $payment->addTransactionCommentsToOrder(
-            $transaction,
-            $this->_objPmReq->objPmNotify->errorMessage
-        );
+        $payment->addTransactionCommentsToOrder($transaction, $this->_objPmReq->objPmNotify->errorMessage);
         $this->_order->setStatus(Order::STATE_CANCELED);
         $this->_order->save();
     }
@@ -256,10 +243,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
             ->setFailSafe(true)
             //build method creates the transaction and returns the object
             ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND);
-        $payment->addTransactionCommentsToOrder(
-            $transaction,
-            $this->_objPmReq->objPmNotify->errorMessage
-        );
+        $payment->addTransactionCommentsToOrder($transaction, $this->_objPmReq->objPmNotify->errorMessage);
         $payment->setIsTransactionClosed(0);
 
         if (!$underVerification) {
@@ -296,10 +280,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
             //build method creates the transaction and returns the object
             ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE);
 
-        $payment->addTransactionCommentsToOrder(
-            $transaction,
-            $this->_objPmReq->objPmNotify->errorMessage
-        );
+        $payment->addTransactionCommentsToOrder($transaction, $this->_objPmReq->objPmNotify->errorMessage);
 
         $payment->setIsTransactionClosed(0);
         $payment->save();
@@ -325,10 +306,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
             //build method creates the transaction and returns the object
             ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND);
 
-        $payment->addTransactionCommentsToOrder(
-            $transaction,
-            $this->_objPmReq->objPmNotify->errorMessage
-        );
+        $payment->addTransactionCommentsToOrder($transaction, $this->_objPmReq->objPmNotify->errorMessage);
         $payment->setIsTransactionClosed(true);
 
         $this->_order->getBaseTotalRefunded(-1 * $this->_objPmReq->objPmNotify->processedAmount);
@@ -359,10 +337,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
             ->setFailSafe(true)
             //build method creates the transaction and returns the object
             ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND);
-        $payment->addTransactionCommentsToOrder(
-            '',
-            'Tranzactie in procesare'
-        );
+        $payment->addTransactionCommentsToOrder('', 'Tranzactie in procesare');
         $this->_order->setStatus(Order::STATE_PAYMENT_REVIEW);
         $this->_order->save();
 
@@ -370,8 +345,8 @@ class Ipn extends Action implements CsrfAwareActionInterface {
 
     protected function _handleCapture()
     {
-
-        $payment = $this->_order->getPayment();
+        
+        $payment = $this->_order->getPayment();  
         $payment->setPreparedMessage($this->_objPmReq->objPmNotify->errorMessage);
         $payment->setTransactionId($this->_objPmReq->objPmNotify->purchaseId );
         $payment->setIsTransactionClosed(0);
@@ -397,10 +372,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
             ->setFailSafe(true)
             //build method creates the transaction and returns the object
             ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND);
-        $payment->addTransactionCommentsToOrder(
-            $transaction,
-            $this->_objPmReq->objPmNotify->errorMessage
-        );
+        $payment->addTransactionCommentsToOrder($transaction, $this->_objPmReq->objPmNotify->errorMessage);
         $this->_order->setStatus(Order::STATE_COMPLETE);
         $this->_order->save();
     }
@@ -413,7 +385,6 @@ class Ipn extends Action implements CsrfAwareActionInterface {
         $request = $this->getRequest();
         if ($request->isPost())
         {
-            $this->setLog('Post request');
             $envKey = $request->getParam('env_key', false);
             $envData = $request->getParam('data', false);
        

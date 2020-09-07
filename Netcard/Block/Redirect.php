@@ -91,6 +91,7 @@ class Redirect extends Template
         $isLoggedIn = $context->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);
         if ($isLoggedIn) {
             $orderId = $connection->fetchAll('SELECT entity_id FROM `'.$tblSalesOrder.'` WHERE quote_id='.$connection->quote($quoteId).' LIMIT 1');
+
             //return $this->quoteFactory->create()->load($quoteId);
 //            $order = $this->_checkoutSession->getLastRealOrder();
 //            $orderId=$order->getEntityId();
@@ -117,7 +118,8 @@ class Redirect extends Template
             $objPmReqCard->signature = $this->getConfigData('auth/signature');
 
             // Get Public Key filename
-            $x509FilePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR . "sandbox." . $objPmReqCard->signature . ".public.cer";
+            $mode = $this->getConfigData('mode/is_live') ? "live." : "sandbox.";
+            $x509FilePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR . $mode . $objPmReqCard->signature . ".public.cer";
 
             $objPmReqCard->orderId = $this->getOrder()->getId();
             $objPmReqCard->returnUrl = $this->getUrl('netopia/payment/success');
@@ -185,6 +187,7 @@ class Redirect extends Template
     }
 
     public function setLog($log) {
-        file_put_contents('/var/www/html/var/log/requestLog.log', $log.' <<<>>> ', FILE_APPEND | LOCK_EX);
+        $logPoint = date(" - H:i:s - ").rand(1,1000)."\n";
+        file_put_contents('/var/www/html/var/log/netopiaLog.log', $log.' <<< Redarect >>> '.$logPoint, FILE_APPEND | LOCK_EX);
     }
 }

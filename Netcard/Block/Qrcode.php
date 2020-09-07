@@ -189,6 +189,7 @@ class Qrcode extends Template
     public function setLog($log) {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $directory = $objectManager->get('\Magento\Framework\Filesystem\DirectoryList');
-        file_put_contents($directory->getRoot().'/var/log/qrCodeLog.log', $log.' <<<>>> ', FILE_APPEND | LOCK_EX);
+        $logPoint = date(" - H:i:s - ").rand(1,1000)."\n";
+        file_put_contents($directory->getRoot().'/var/log/netopiaLog.log', $log.' >>> Qr Code <<< '.$logPoint, FILE_APPEND | LOCK_EX);
     }
 }
