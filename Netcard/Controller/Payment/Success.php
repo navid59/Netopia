@@ -36,8 +36,29 @@ class Success extends Action
      * @throws \Magento\Framework\Exception\NotFoundException
      */
     public function execute()
-    { 
-       $page = $this->pageFactory->create();
-       return $page;          
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $customerSession = $objectManager->get('Magento\Customer\Model\Session');
+        if($customerSession->isLoggedIn()) {
+           $page = $this->pageFactory->create();
+           return $page;
+        } else {
+            // Temporary Show Detaile 
+             $page = $this->pageFactory->create();
+             return $page;
+            // $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+            // $orderData = $objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId($_GET['orderId']);
+
+            // if($orderData->getCustomerIsGuest()){
+            //     echo "Is Guest";
+            //     // $page = $this->pageFactory->create();
+            //     // return $page;
+            // } else {
+            //     echo "este lup";
+            //     // $resultRedirect = $this->resultRedirectFactory->create();
+            //     // $resultRedirect->setPath(''); // set this path to what you want your customer to go
+            //     // return $resultRedirect;
+            // }
+        }        
     }
 }
