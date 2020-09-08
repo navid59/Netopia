@@ -2,6 +2,19 @@
 <?php 
     $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
     $orderData = $objectManager->create('Magento\Sales\Model\Order')->loadByIncrementId($block->getOrderId());
+
+    /* check Guest User and Verify if did Order Otherwise Redirect to Home */
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $customerSession = $objectManager->get('Magento\Customer\Model\Session');
+    if(!$customerSession->isLoggedIn()) {
+       if (!$orderData->getCustomerIsGuest()) {
+           $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+           $redirect = $objectManager->get('\Magento\Framework\App\Response\Http');
+           $redirect->setRedirect('/');
+       }
+    }    
+
+    
     switch ($orderData['status']) {
         case 'canceled':
             $msg = "Sorry, Your order is canceled!";

@@ -49,7 +49,6 @@ class Success extends \Magento\Framework\View\Element\Template
     protected function prepareBlockData()
     {
         $order = $this->getOrder();
-
         $this->addData(
             [
                 'is_order_visible' => $this->isVisible($order),

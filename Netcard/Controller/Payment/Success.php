@@ -36,17 +36,8 @@ class Success extends Action
      * @throws \Magento\Framework\Exception\NotFoundException
      */
     public function execute()
-    {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $customerSession = $objectManager->get('Magento\Customer\Model\Session');
-        if($customerSession->isLoggedIn()) {
-           $page = $this->pageFactory->create();
-           return $page;
-        } else {
-            // Mage::getSingleton('core/session')->addError('Your page is expired!.');
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath(''); // set this path to what you want your customer to go
-            return $resultRedirect;
-        }        
+    { 
+       $page = $this->pageFactory->create();
+       return $page;          
     }
 }
