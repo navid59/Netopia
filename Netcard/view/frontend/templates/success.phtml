@@ -10,7 +10,7 @@
             $msg = "You are successfully paid!";
             break;
         case 'payment_review':
-            $msg = "Your payment is in reviewing!";
+            $msg = "Your payment is in review!";
             break;
         case 'processing':
             $msg = "Your order is in processing!";
@@ -35,7 +35,7 @@
         if (!in_array($orderData['status'], array("canceled", "fraud"))) {
             ?>
             <p>Your order number : <strong><?php echo $block->getOrderId();?></strong></p>
-            <p>Your total paid ampunt : <strong><?php echo $orderData->getData('base_grand_total');?></strong></p>
+            <p>Your total paid amount : <strong><?php echo $orderData->getData('base_grand_total');?></strong></p>
             <div class="actions-toolbar">
                 <div class="primary">
                     <a class="action primary continue" href="<?php /* @escapeNotVerified */ echo $block->getUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Continue Shopping') ?></span></a>
