@@ -395,10 +395,19 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                 $path = $filePath . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR;
 
                 if ($this->getConfigData('debug') == 1) {
-                    $privateKeyFilePath = $path . "sandbox.".$this->getConfigData('auth/signature')."private.key";
-                }
-                else {
-                    $privateKeyFilePath = $path . "live.".$this->getConfigData('auth/signature')."private.key";
+                    $sandboxPrivateKey = $this->getConfigData('mode/sandbox_private_key');
+                    if(!is_null($sandboxPrivateKey) && file_exists($path.$sandboxPrivateKey)){
+                        $privateKeyFilePath = $path . $sandboxPrivateKey;
+                    }else{
+                        $privateKeyFilePath = $path . "sandbox.".$this->getConfigData('auth/signature')."private.key";
+                    }
+                }else {
+                    $livePrivateKey = $this->getConfigData('mode/live_private_key');
+                    if(!is_null($livePrivateKey) && file_exists($path.$livePrivateKey)) {
+                        $privateKeyFilePath = $path . $livePrivateKey;
+                    }else {
+                        $privateKeyFilePath = $path . "live.".$this->getConfigData('auth/signature')."private.key";
+                    }
                 }
 
                 try

@@ -108,6 +108,7 @@ class Redirect extends Template
     {
         $e = null;
         $moduleDirectory = $this->_moduleReader->getModuleDir(Dir::MODULE_ETC_DIR, 'Netopia_Netcard');
+        $filePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR;
         $shipping = $this->getOrder()->getShippingAddress();
         $billing = $this->getOrder()->getBillingAddress();
         $order = $this->getOrder();
@@ -119,7 +120,22 @@ class Redirect extends Template
 
             // Get Public Key filename
             $mode = $this->getConfigData('mode/is_live') ? "live." : "sandbox.";
-            $x509FilePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR . $mode . $objPmReqCard->signature . ".public.cer";
+            if($this->getConfigData('mode/is_live')) {
+                $livePublicKey = $this->getConfigData('mode/live_public_key');
+                if(!is_null($livePublicKey) && file_exists($filePath.$livePublicKey)){
+                    $x509FilePath = $filePath.$livePublicKey;
+                } else {
+                    $x509FilePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR . $mode . $objPmReqCard->signature . ".public.cer";
+                }
+            } else {
+                $sandboxPublicKey = $this->getConfigData('mode/sandbox_public_key');
+                if(!is_null($sandboxPublicKey) && file_exists($filePath.$sandboxPublicKey)) {
+                    $x509FilePath = $filePath.$sandboxPublicKey;
+                } else {
+                    $x509FilePath = $moduleDirectory . DIRECTORY_SEPARATOR . "certificates" . DIRECTORY_SEPARATOR . $mode . $objPmReqCard->signature . ".public.cer";
+                }
+            }
+
 
             $objPmReqCard->orderId = $this->getOrder()->getId();
             $objPmReqCard->returnUrl = $this->getUrl('netopia/payment/success');
