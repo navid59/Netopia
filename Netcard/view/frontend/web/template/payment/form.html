@@ -39,7 +39,7 @@
                         <!-- ko i18n: 'card payemnt'--><!-- /ko -->
                     </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check" data-bind="visible: getQrCode()">
                     <input class="form-check-input" type="radio" name="paymentMethod" id="qrcodePayment" value="qrcode">
                     <label class="form-check-label" for="qrcodePayment">
                         <!-- ko i18n: 'mobilPayWALLET'--><!-- /ko -->
@@ -47,6 +47,8 @@
                 </div>
             </div>
         </div>
+
+        
 
         <div class="actions-toolbar">
             <div class="primary">

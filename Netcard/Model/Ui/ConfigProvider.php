@@ -14,6 +14,17 @@ use Netopia\Netcard\Gateway\Http\Client\ClientMock;
 final class ConfigProvider implements ConfigProviderInterface
 {
     const CODE = 'net_card';
+    protected $scopeConfig;
+
+   /**
+   * Netopia QR code path
+   */
+   const QR_CODE_PATH = 'payment/net_card/api/qr_payment';
+
+   public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
+   {
+        $this->scopeConfig = $scopeConfig;
+   }
 
     /**
      * Retrieve assoc array of checkout configuration
@@ -25,10 +36,6 @@ final class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => [
                 self::CODE => [
-                    'logo' => [
-                        'alt' => __('Short Alt text'),
-                        'src' => 'https://netopia-payments.com/core/assets/5993428bab/images/logo.png'
-                    ],
                     'method' => [
                         'card' => __('Card'),
                         'crypto' => __('Crypto')
@@ -36,9 +43,21 @@ final class ConfigProvider implements ConfigProviderInterface
                     'transactionResults' => [
                         ClientMock::SUCCESS => __('Success'),
                         ClientMock::FAILURE => __('Fraud')
-                    ]
+                    ],
+                    'isQrCode' => $this->getAllowQrCode() ? "willDisplay" : '',
                 ]
             ]
         ];
     }
+
+    //Get Qr Permition
+    protected function getAllowQrCode()
+        {
+        $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+        $isAllowQrCode = $this->scopeConfig->getValue(self::QR_CODE_PATH, $storeScope);
+        if($isAllowQrCode)
+            return true;
+        else
+            return false;
+        }
 }

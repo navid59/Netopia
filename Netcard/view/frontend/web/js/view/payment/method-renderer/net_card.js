@@ -56,6 +56,10 @@ define(
                         'transaction_result': value
                     }
                 });
+            },
+
+            getQrCode: function() {
+                return window.checkoutConfig.payment.net_card.isQrCode;
             }
         });
     }
