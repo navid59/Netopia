@@ -4,8 +4,8 @@ namespace Netopia\Netcard\Model\Config\Backend;
  
 class CustomFileType extends \Magento\Config\Model\Config\Backend\File
 {
-	const UPLOAD_DIR = '/var/www/html/app/code/Netopia/Netcard/etc/certificates/'; // Folder save file
-
+	protected $uploadDir; // upload Folder for certificates
+    
 	/**
      * Overwirte Method - Save uploaded file before saving config value
      *
@@ -54,8 +54,8 @@ class CustomFileType extends \Magento\Config\Model\Config\Backend\File
 
 	protected function _getUploadDir()
     {
-        // return $this->getAbsolutePath($this->_appendScopeInfo(self::UPLOAD_DIR));
-        return self::UPLOAD_DIR;
+        $this->uploadDir = getcwd().DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'code'.DIRECTORY_SEPARATOR.'Netopia'.DIRECTORY_SEPARATOR.'Netcard'.DIRECTORY_SEPARATOR.'etc'.DIRECTORY_SEPARATOR.'certificates'.DIRECTORY_SEPARATOR;
+        return $this->uploadDir;
     }
 
 	protected function _addWhetherScopeInfo()
@@ -76,7 +76,7 @@ class CustomFileType extends \Magento\Config\Model\Config\Backend\File
     }
 
     public function _DeleteKey($keyName) {
-    	$keyFileName = self::UPLOAD_DIR.$keyName; 
+    	$keyFileName = $this->_getUploadDir().$keyName; 
         if(file_exists($keyFileName))
         	unlink($keyFileName);
         return true;
