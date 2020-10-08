@@ -204,7 +204,7 @@
 
                     <field id="golive" ttranslate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Ask for Go Live Verification </label>
-                        <frontend_model>Netopia\Netcard\Block\System\Config\Button</frontend_model>
+                        <frontend_model>Netopia\Netcard\Block\System\Config\Golive</frontend_model>
                         <comment>Send request and generate XML activator</comment>
                     </field>
 

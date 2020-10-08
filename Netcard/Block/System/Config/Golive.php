@@ -5,7 +5,7 @@ use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-class Button extends Field
+class Golive extends Field
 {
 	protected $_template = 'Netopia_Netcard::system/config/button.phtml';
 
