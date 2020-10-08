@@ -1,0 +1,41 @@
+<script>
+require([
+    'jquery',
+    'prototype',
+], function(jQuery){
+    function send_request_golive() {
+        console.log('send_request_golive - Start');
+        params = {
+        };
+
+        new Ajax.Request('<?php echo $block->getAjaxUrl() ?>', {
+            loaderArea:     false,
+            asynchronous:   true,
+            parameters:     params,
+            onSuccess: function(transport) {
+                response = JSON.parse(transport.responseText);
+                // console.log(transport);
+                var resultText = '';
+                    if (transport.status > 200) {
+                        resultText = transport.statusText;
+                    } else {
+                        resultText = response.msg;
+                    }
+                    jQuery('#golive_message').text(resultText);
+            }
+        });
+        console.log(response);
+        console.log('----------------------------------------');
+        console.log('send_request_golive - End');
+    }
+
+    jQuery('#golive_button').click(function () {
+        send_request_golive ();
+    });
+});
+</script>
+<?php 
+    // $controller = $block->getCustomUrl();
+    echo $block->getButtonHtml();
+?>
+<span id="golive_message" style="padding-left: 10px; font-weight: bold;"></span>
