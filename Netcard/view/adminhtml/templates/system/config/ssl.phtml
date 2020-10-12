@@ -3,8 +3,8 @@ require([
     'jquery',
     'prototype',
 ], function(jQuery){
-    function send_request_golive() {
-        console.log('send_request_golive - Start');
+    function check_ssl_certificate() {
+        console.log('SSL Check - Start');
         params = {
         };
 
@@ -21,16 +21,16 @@ require([
                     } else {
                         resultText = response.msg;
                     }
-                    jQuery('#golive_message').text(resultText);
+                    jQuery('#ssl_message').text(resultText);
             }
         });
         console.log(response);
         console.log('----------------------------------------');
-        console.log('send_request_golive - End');
+        console.log('SSL Check - End');
     }
 
-    jQuery('#golive_button').click(function () {
-        send_request_golive ();
+    jQuery('#ssl_verify_button').click(function () {
+        check_ssl_certificate ();
     });
 });
 </script>
@@ -38,4 +38,4 @@ require([
     // $controller = $block->getCustomUrl();
     echo $block->getButtonHtml();
 ?>
-<span id="golive_message" style="padding-left: 10px; font-weight: bold;"></span>
+<span id="ssl_message" style="padding-left: 10px; font-weight: bold;"></span>

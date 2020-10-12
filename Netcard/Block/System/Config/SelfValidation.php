@@ -5,9 +5,9 @@ use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-class Golive extends Field
+class SelfValidation extends Field
 {
-	protected $_template = 'Netopia_Netcard::system/config/sendVerfiyRequest.phtml';
+	protected $_template = 'Netopia_Netcard::system/config/selfValidation.phtml';
 
 	public function __construct(
         Context $context,
@@ -34,7 +34,7 @@ class Golive extends Field
 
     public function getAjaxUrl()
     {
-        return $this->getUrl('netopia/tools/xml');
+        return $this->getUrl('netopia/tools/selfValidation');
     }
 
     public function getButtonHtml()
@@ -43,8 +43,8 @@ class Golive extends Field
             'Magento\Backend\Block\Widget\Button'
         )->setData(
             [
-                'id' => 'golive_button',
-                'label' => __('Send request to Live Verification'),
+                'id' => 'selfvalidation_button',
+                'label' => __('Self Validation'),
             ]
         );
         return $button->toHtml();

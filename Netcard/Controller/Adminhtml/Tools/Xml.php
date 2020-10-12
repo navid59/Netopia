@@ -42,24 +42,32 @@ class Xml extends Action
      */
     public function execute()
     {
-        $ntpConfigData = array (
-                      'declare_complete_description' => $this->getConfigData('conditions/complete_description'),
-                      'declare_price_currency' => $this->getConfigData('conditions/price_currency'),
-                      'declare_contact_info' => $this->getConfigData('conditions/contact_info'),
-                      'declare_mandatory_pages' => $this->getConfigData('conditions/mandatory_pages'),
-                      'declare_forbidden_business' => $this->getConfigData('forbidden_business'),
-                      'terms_conditions_url' => $this->getConfigData('terms_conditions_url'),
-                      'privacy_policy_url' => $this->getConfigData('privacy_policy_url'),
-                      'delivery_policy_url' => $this->getConfigData('delivery_policy_url'),
-                      'return_cancel_policy_url' => $this->getConfigData('return_cancel_policy_url'),
-                      'gdpr_policy_url' => $this->getConfigData('gdpr_policy_url'),
-                      'visa_logo_link' => $this->getConfigData('visa_logo_link'),
-                      'master_logo_linkl' => $this->getConfigData('master_logo_linkl'),
-                      'netopia_logo_link' => $this->getConfigData('netopia_logo_link'),
-                      'has_ssl' => $this->has_ssl()
+        $ntpDeclare = array (
+                      'completeDescription' => $this->getConfigData('conditions/complete_description'),
+                      'priceCurrency' => $this->getConfigData('conditions/price_currency'),
+                      'contactInfo' => $this->getConfigData('conditions/contact_info'),
+                      'mandatoryPages' => $this->getConfigData('conditions/mandatory_pages'),
+                      'forbiddenBusiness' => $this->getConfigData('forbidden_business')
                     );
+
+        $ntpUrl = array(
+                  'termsAndConditions' => $this->getConfigData('terms_conditions_url'),
+                  'privacyPolicy' => $this->getConfigData('privacy_policy_url'),
+                  'deliveryPolicy' => $this->getConfigData('delivery_policy_url'),
+                  'returnAndCancelPolicy' => $this->getConfigData('return_cancel_policy_url'),
+                  'gdprPolicy' => $this->getConfigData('gdpr_policy_url')
+                  );
+
+        $ntpImg = array(
+                  'visaLogoLink' => $this->getConfigData('visa_logo_link'),
+                  'masterLogoLink' => $this->getConfigData('master_logo_linkl'),
+                  'netopiaLogoLink' => $this->getConfigData('netopia_logo_link')
+                );
         
-        if($this->goliveValidationXml($ntpConfigData)) {
+        // print_r($this->makeActivateJson($ntpDeclare, $ntpUrl, $ntpImg));
+        // die('AAA');
+
+        if($this->makeActivateXml($ntpDeclare, $ntpUrl, $ntpImg )) {
           $xmlResponse = array(
             'status' =>  true,
             'msg' => 'Your Request is sent succefuly' );
@@ -92,7 +100,7 @@ class Xml extends Action
         return $result;
     }
 
-    function goliveValidationXml($configData) {
+    function makeActivateXml($declareatins, $urls, $images) {
     
     $domtree = new \DOMDocument('1.0', 'UTF-8');
     $domtree->formatOutput = true;
@@ -100,15 +108,36 @@ class Xml extends Action
     $xmlRoot = $domtree->appendChild($xmlRoot);
 
     $sac_key = $domtree->createElement("sac_key", $this->getConfigData('auth/signature'));
-    $sac_key = $xmlRoot->appendChild($sac_key);
+    $xmlRoot->appendChild($sac_key);
+    
     $agr = $domtree->createElement("agrremnts");
-    $agr = $xmlRoot->appendChild($agr);
+    $xmlRoot->appendChild($agr);
 
-    foreach ($configData as $key => $value) {
-        $agr->appendChild($domtree->createElement($key, $value ));
+    $declare = $domtree->createElement("declare");
+    $agr->appendChild($declare);
+
+    foreach ($declareatins as $key => $value) {
+        $declare->appendChild($domtree->createElement($key, $value ));
     }
 
-    $last_update = $domtree->createElement("last_update", date("Y/m/d H:i:s"));
+    $url = $domtree->createElement("urls");
+    $agr->appendChild($url);
+
+    foreach ($urls as $key => $value) {
+        $url->appendChild($domtree->createElement($key, $value ));
+    }
+
+    $img = $domtree->createElement("images");
+    $agr->appendChild($img);
+
+    foreach ($images as $key => $value) {
+        $img->appendChild($domtree->createElement($key, $value ));
+    }
+
+    $ssl = $domtree->createElement("ssl", $this->has_ssl());
+    $agr->appendChild($ssl);
+
+    $last_update = $domtree->createElement("lastUpdate", date("Y/m/d H:i:s"));
     $last_update = $xmlRoot->appendChild($last_update);
 
     $last_update = $domtree->createElement("platform", 'Magento 2');
@@ -130,5 +159,22 @@ class Xml extends Action
       if (file_exists($agreemnetFile)) {
          unlink($agreemnetFile);
       }
+    }
+
+    function makeActivateJson($declareatins, $urls, $images) {
+      $jsonData = array(
+        "sac_key" => $this->getConfigData('auth/signature'),
+        "agrremnts" => array(
+              "declare" => $declareatins,
+              "urls"    => $urls,
+              "images"  => $images,
+              "ssl", $this->has_ssl()
+            ),
+        "lastUpdate" => date("Y/m/d H:i:s"),
+        "platform" => 'Magento 2'
+      );
+      
+      $post_data = json_encode($jsonData, JSON_FORCE_OBJECT);
+      return $post_data;
     }
 }

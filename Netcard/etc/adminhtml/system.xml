@@ -129,7 +129,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <comment>If your website has a valid SSL certificate</comment>
                     </field>
-
+                    
                     <group id="forbidden" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Not accpeted business / activities</label>
                         <comment>
@@ -202,6 +202,11 @@
                         </field>
                     </group>                    
 
+                    <field id="checkup" ttranslate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Self Validation</label>
+                        <frontend_model>Netopia\Netcard\Block\System\Config\SelfValidation</frontend_model>
+                        <comment>Save your configurations and then do self validation</comment>
+                    </field>
                     <field id="golive" ttranslate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Ask for Go Live Verification </label>
                         <frontend_model>Netopia\Netcard\Block\System\Config\Golive</frontend_model>
