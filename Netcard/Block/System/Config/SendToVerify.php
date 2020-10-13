@@ -5,7 +5,7 @@ use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-class Golive extends Field
+class SendToVerify extends Field
 {
 	protected $_template = 'Netopia_Netcard::system/config/sendVerfiyRequest.phtml';
 
@@ -34,7 +34,7 @@ class Golive extends Field
 
     public function getAjaxUrl()
     {
-        return $this->getUrl('netopia/tools/xml');
+        return $this->getUrl('netopia/tools/Jsonrequest');
     }
 
     public function getButtonHtml()
@@ -43,8 +43,8 @@ class Golive extends Field
             'Magento\Backend\Block\Widget\Button'
         )->setData(
             [
-                'id' => 'golive_button',
-                'label' => __('Send request to Live Verification'),
+                'id' => 'send_ntp_verify',
+                'label' => __('Send request to Netopia to Verify'),
             ]
         );
         return $button->toHtml();

@@ -3,8 +3,8 @@ require([
     'jquery',
     'prototype',
 ], function(jQuery){
-    function send_request_golive() {
-        console.log('send_request_golive222 - Start');
+    function sendRequestNtpVerify() {
+        console.log('Send Request to NETOPIA Payment - Start');
         params = {
         };
 
@@ -26,11 +26,11 @@ require([
         });
         console.log(response);
         console.log('----------------------------------------');
-        console.log('send_request_golive222 - End');
+        console.log('Send Request to NETOPIA Payment - End');
     }
 
-    jQuery('#golive_button').click(function () {
-        send_request_golive ();
+    jQuery('#send_ntp_verify').click(function () {
+        sendRequestNtpVerify ();
     });
 });
 </script>
