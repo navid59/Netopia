@@ -52,11 +52,15 @@ class Jsonrequest extends Action
     public function execute()
     {
         $ntpDeclare = array (
-                      'completeDescription' => $this->getConfigData('conditions/complete_description'),
-                      'priceCurrency' => $this->getConfigData('conditions/price_currency'),
-                      'contactInfo' => $this->getConfigData('conditions/contact_info'),
-                      'forbiddenBusiness' => $this->getConfigData('forbidden_business')
+                      'completeDescription' => (bool) $this->getConfigData('conditions/complete_description'),
+                      'priceCurrency' =>  (bool) $this->getConfigData('conditions/price_currency'),
+                      'contactInfo' =>  (bool) $this->getConfigData('conditions/contact_info'),
+                      'forbiddenBusiness' =>  (bool) $this->getConfigData('forbidden_business')
                     );
+
+        // echo "<pre>";
+        // print_r($ntpDeclare);
+        // echo "</pre><hr>";
 
         $ntpUrl = array(
                   'termsAndConditions' => $this->getConfigData('terms_conditions_url'),
@@ -80,7 +84,19 @@ class Jsonrequest extends Action
           'data'    => $this->getEncData()
           );
         
+        /*
+        * A sample of Encrypted data
+        */
+        // echo "<pre>";
+        // print_r($this->encData);
+        // echo "</pre>";
+        
+
         $result = json_decode($this->sendJsonCurl());
+
+        // echo "<pre>";
+        // print_r($result);
+        // echo "</pre>";
         
         if($result->code == 200) {
           $response = array(
@@ -132,7 +148,7 @@ class Jsonrequest extends Action
     function makeActivateJson($declareatins, $urls, $images) {
       $jsonData = array(
         "sac_key" => $this->getConfigData('auth/signature'),
-        "agrremnts" => array(
+        "agreements" => array(
               "declare" => $declareatins,
               "urls"    => $urls,
               "images"  => $images,
@@ -209,10 +225,51 @@ class Jsonrequest extends Action
 
         // Execute the POST request
         $result = curl_exec($ch);
+
+        if (!curl_errno($ch)) {
+              switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
+                  case 200:  # OK
+                      $arr = array(
+                          'code'    => $http_code,
+                          'message' => "You send your request, successfully",
+                          'data'    => json_decode($result)
+                      );
+                      break;
+                  case 404:  # Not Found
+                      $arr = array(
+                          'code'    => $http_code,
+                          'message' => "You send request to wrong URL"
+                      );
+                      break;
+                  case 400:  # Bad Request
+                      $arr = array(
+                          'code'    => $http_code,
+                          'message' => "You send Bad Request"
+                      );
+                      break;
+                  case 405:  # Method Not Allowed
+                      $arr = array(
+                          'code'    => $http_code,
+                          'message' => "Your method of sending data are Not Allowed"
+                      );
+                      break;
+                  default:
+                      $arr = array(
+                          'code'    => $http_code,
+                          'message' => "Opps! Something happened, verify how you send data & try again!!!"
+                      );
+              }
+          } else {
+              $arr = array(
+                  'code'    => 0,
+                  'message' => "Opps! There is some problem, you are not able to send data!!!"
+              );
+          }
         
         // Close cURL resource
         curl_close($ch);
         
-        return $result;
+        $finalResult = json_encode($arr, JSON_FORCE_OBJECT);
+        return $finalResult;
       }
 }
