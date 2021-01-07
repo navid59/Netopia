@@ -8,7 +8,6 @@ use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order;
-use Magento\Checkout\Model\Session;
 
 class Redirect extends Action {
     /**
@@ -17,13 +16,7 @@ class Redirect extends Action {
     private $pageFactory;
     protected $_resource;
     // protected $_orderFactory;
-    /**
-     * Checkout session object
-     *
-     * @var \Magento\Checkout\Model\Session
-     */
-    protected $_checkoutSession;
-
+    
     /**
      * Index constructor.
      * @param Context $context
@@ -36,11 +29,9 @@ class Redirect extends Action {
         Context $context,
         PageFactory $pageFactory,
         // Order $orderFactory,
-        \Magento\Checkout\Model\Session $checkoutSession,
         ResourceConnection $resource
     )
     {
-        $this->_checkoutSession = $checkoutSession;
         parent::__construct($context);
         $this->pageFactory = $pageFactory;
         $this->_resource = $resource;
