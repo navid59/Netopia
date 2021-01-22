@@ -4,6 +4,9 @@
     $formData = $block->getFormData();
     $paymentUrl = ($block->getConfigData('debug') == 1) ? 'http://sandboxsecure.mobilpay.ro' : 'https://secure.mobilpay.ro';
 
+    // echo "<hr>";
+    // print_r($formData);
+    // echo "</hr>";
     if($formData['status']) {
        ?>
         <div class="">
@@ -26,6 +29,13 @@
         echo '<div class="alert alert-danger" role="alert">
                 OOPS, something is wrong, you are not able to redirect into Payment page!
               </div>';
+              if(!is_null($formData['message'])) {
+                echo '
+                <div class="alert alert-danger" role="alert">
+                    <h5>'.$formData['message'].'</h5>
+                </div>
+                ';
+              }
     }
 
 ?>

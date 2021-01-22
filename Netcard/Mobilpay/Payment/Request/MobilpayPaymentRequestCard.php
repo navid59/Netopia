@@ -35,7 +35,7 @@
             }
 
             $this->invoice = new MobilpayPaymentInvoice($elems->item(0));
-
+            
             return $this;
         }
 
@@ -44,9 +44,6 @@
             //var_dump($this->orderId);
             if(is_null($this->signature) || is_null($this->orderId) || !($this->invoice instanceof MobilpayPaymentInvoice))
             {
-                var_dump('ggggg');
-                var_dump($this->orderId);
-                var_dump($this->invoice instanceof MobilpayPaymentInvoice);
                 throw new \Exception('One or more mandatory properties are invalid!', self::ERROR_PREPARE_MANDATORY_PROPERTIES_UNSET);
             }
 
@@ -119,6 +116,13 @@
             }
 
             $this->_xmlDoc->appendChild($rootElem);
+            ///////////////////
+            // $result = $this->_xmlDoc->save('/var/www/html/app/code/Netopia/testRequest.xml') ? true : false;
+            // if($result)
+            //     die("Xml request file saved localy!");
+            // else
+            //     die("Xml request file could not save localy!!");  
+            ///////////////////
             return $this;
         }
 

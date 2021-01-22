@@ -20,12 +20,12 @@
                     <field id="signature" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Merchant Id / Signature</label>
                     </field>
-                    <field id="username" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <!-- <field id="username" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Username</label>
                     </field>
                     <field id="password" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Password</label>
-                    </field>
+                    </field> -->
                 </group>
                 <group id="api" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
                     <label>Advanced configuration </label>
@@ -77,25 +77,21 @@
                     <field id="live_public_key" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="20" showInDefault="1" showInWebsite="1" >
                         <label>Live public key</label>
                         <backend_model>Netopia\Netcard\Model\Config\Backend\CustomFileType</backend_model>
-                        <upload_dir></upload_dir>
                     </field>
 
                     <field id="live_private_key" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="30" showInDefault="1" showInWebsite="1" >
                         <label>Live private key</label>
                         <backend_model>Netopia\Netcard\Model\Config\Backend\CustomFileType</backend_model>
-                        <upload_dir></upload_dir>
                     </field>
 
                     <field id="sandbox_public_key" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="40" showInDefault="1" showInWebsite="1" >
                         <label>Sandbox public key</label>
                         <backend_model>Netopia\Netcard\Model\Config\Backend\CustomFileType</backend_model>
-                        <upload_dir></upload_dir>
                     </field>
 
                     <field id="sandbox_private_key" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="50" showInDefault="1" showInWebsite="1" >
                         <label>Sandbox private key</label>
                         <backend_model>Netopia\Netcard\Model\Config\Backend\CustomFileType</backend_model>
-                        <upload_dir></upload_dir>
                     </field>
                 </group>
                 <group id="conditions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -124,7 +120,7 @@
                         <comment>Declare that, the mandatory pages (such as Terms and conditions, Privacy policy, Delivery policy, Return / Cancellation policy, GDPR, ...) are clearly displayed on the website </comment>
                     </field>
 
-                    <field id="mandatory_pages" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="ssl_certificate" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>SSL Certificate Support</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <comment>If your website has a valid SSL certificate</comment>
@@ -185,7 +181,7 @@
 
                     <group id="image" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Mandatory logo links</label>
-                        <field id="visa_logo_link" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <!-- <field id="visa_logo_link" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>Visa card logo link</label>
                             <config_path>payment/net_card/visa_logo_link</config_path>
                             <comment>ex. somewhere/visa_card_logo.jpg. without your actual domain name.</comment>
@@ -194,7 +190,7 @@
                             <label>Mastercard logo link</label>
                             <config_path>payment/net_card/master_logo_linkl</config_path>
                             <comment>ex. somewhere/mastercard_logo.jpg. without your actual domain name.</comment>
-                        </field>
+                        </field> -->
                         <field id="netopia_logo_link" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>NETOPIA Payments logo link</label>
                             <config_path>payment/net_card/netopia_logo_link</config_path>
@@ -202,12 +198,12 @@
                         </field>
                     </group>                    
 
-                    <field id="checkup" ttranslate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="checkup" translate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Self Validation</label>
                         <frontend_model>Netopia\Netcard\Block\System\Config\SelfValidation</frontend_model>
                         <comment>Save your configurations and then do self validation</comment>
                     </field>
-                    <field id="golive" ttranslate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="golive" translate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Ask for Go Live Verification </label>
                         <frontend_model>Netopia\Netcard\Block\System\Config\SendToVerify</frontend_model>
                         <comment>Send request to NETOPIA Payments to verify</comment>
