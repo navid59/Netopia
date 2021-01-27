@@ -130,16 +130,18 @@
                         <label>Not accpeted business / activities</label>
                         <comment>
                              <![CDATA[
+                                <p><strong>The following domains not accepted by VISA and MASTERCARD for online card payments:</strong></p>
                                 <ul>
-                                    <li>domeniul farmaceutic: produse sintetice si naturiste, inclusiv suplimente alimentare</li>
-                                    <li>tutun, inclusiv narghilea, tigari electronice si consumabile</li>
-                                    <li>gambling sub toate formele (jocuri de noroc, pariuri sportive si nu numai, quizz-uri in care se percepe taxa de participare si se castiga bani, alte jocuri cu castiguri in bani - bingo, forex, site-uri de licitatii, etc)</li>
-                                    <li>materiale pentru adulti: inchiriere/vanzare casete video de profil, (video)chat, dating, escorte</li>
-                                    <li>alcool (exceptie vin si bere)</li>
-                                    <li>articole si produse de vanatoare (arme albe si arme de foc, cu munitie clasica si comprimata)</li>
-                                    <li>videostreaming (cu exceptia cazului in care exista acte doveditoare: sunteti persoana care realizeaza aceste video-uri sau detineti drepturi de autor asupra lor</li>
-                                    <li>astrologie, tarot, etc.</li>
+                                    <li>pharmaceutical: synthetic and natural products including food supplements</li>
+                                    <li>tobacco, including hookah, electronic cigarettes and supplies</li>
+                                    <li>all types of gambling (gambling, sports betting and not only, quizzes with participation fee and earn money, other games that offer money winnings: bingo, forex, auction sites, etc.)</li>
+                                    <li>adult materials: rental / sale of profile video tapes, (video) chat, dating, escorts</li>
+                                    <li>alcohol (except wine and beer)</li>
+                                    <li>hunting articles and products (knives and firearms, with classic and compressed ammunition)</li>
+                                    <li>video streaming (unless is provided evidence of ownership, copyright of the materials in question)</li>
+                                    <li>services regarding tarot, astrology and related</li>
                                 </ul>
+                                <p>Select <strong>"yes"</strong> to declare your activity is legal, regarding VISA & MASTERCARD policy.</p>
                             ]]>
                         </comment>
                         <field id="forbidden_business" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
