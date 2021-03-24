@@ -20,12 +20,6 @@
                     <field id="signature" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Merchant Id / Signature</label>
                     </field>
-                    <!-- <field id="username" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Username</label>
-                    </field>
-                    <field id="password" translate="label" type="password" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Password</label>
-                    </field> -->
                 </group>
                 <group id="api" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
                     <label>Advanced configuration </label>
@@ -127,7 +121,7 @@
                     </field>
                     
                     <group id="forbidden" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Not accpeted business / activities</label>
+                        <label>Not accepted business / activities</label>
                         <comment>
                              <![CDATA[
                                 <p><strong>The following domains not accepted by VISA and MASTERCARD for online card payments:</strong></p>
@@ -183,21 +177,13 @@
 
                     <group id="image" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Mandatory logo links</label>
-                        <!-- <field id="visa_logo_link" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Visa card logo link</label>
-                            <config_path>payment/net_card/visa_logo_link</config_path>
-                            <comment>ex. somewhere/visa_card_logo.jpg. without your actual domain name.</comment>
+                        
+                        <field id="netopia_logo" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Declare, used NETOPIA Payments logo</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <comment>Declare that, the NETOPIA Payments logo is clearly displayed on the website </comment>
                         </field>
-                        <field id="master_logo_link" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Mastercard logo link</label>
-                            <config_path>payment/net_card/master_logo_linkl</config_path>
-                            <comment>ex. somewhere/mastercard_logo.jpg. without your actual domain name.</comment>
-                        </field> -->
-                        <field id="netopia_logo_link" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>NETOPIA Payments logo link</label>
-                            <config_path>payment/net_card/netopia_logo_link</config_path>
-                            <comment>ex. somewhere/netopia-payments-logo.jpg. without your actual domain name.</comment>
-                        </field>
+
                     </group>                    
 
                     <field id="checkup" translate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -206,9 +192,9 @@
                         <comment>Save your configurations and then do self validation</comment>
                     </field>
                     <field id="golive" translate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Ask for Go Live Verification </label>
+                        <label>Ask NETOPIA Payments to verify the application</label>
                         <frontend_model>Netopia\Netcard\Block\System\Config\SendToVerify</frontend_model>
-                        <comment>Send request to NETOPIA Payments to verify</comment>
+                        <comment>Send request to NETOPIA Payments</comment>
                     </field>
 
                 </group>    

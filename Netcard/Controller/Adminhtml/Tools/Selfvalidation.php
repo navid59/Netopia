@@ -56,14 +56,10 @@ class Selfvalidation extends Action
             'ssl'     => $sslVerification
             );
         
-        // echo "<pre>";
-        // print_r($validateResult)."<br>";
-        // echo "</pre>";
 
         $isValid = true;
         $msg = null;
         foreach ($validateResult as $key => $value) {
-            // echo "<hr>".$key.' - '.$value['status'];
             if($value['status'] != 1) {
                 $isValid = false;
                 switch ($key) {
@@ -83,8 +79,7 @@ class Selfvalidation extends Action
             }
         }
 
-        // echo "<hr>".$msg."<hr>";
-
+        
         if($isValid) {
           $jsonResponse = array(
             'status' =>  true,
@@ -96,9 +91,7 @@ class Selfvalidation extends Action
         }
         /*
         * Send response to JS
-        */
-        
-        
+        */        
         echo (json_encode($jsonResponse));
            
     }
@@ -112,10 +105,10 @@ class Selfvalidation extends Action
     public function hasDeclarations() {
         $isValid = 1;
         $declarations = array (
-                      'completeDescription' => $this->getConfigData('conditions/complete_description'),
-                      'priceCurrency' => $this->getConfigData('conditions/price_currency'),
-                      'contactInfo' => $this->getConfigData('conditions/contact_info'),
-                      'forbiddenBusiness' => $this->getConfigData('forbidden_business')
+                      'completeDescription' => ($this->getConfigData('conditions/complete_description') == "1") ? true : false,
+                      'priceCurrency' => ($this->getConfigData('conditions/price_currency') == "1") ? true : false,
+                      'contactInfo' => ($this->getConfigData('conditions/contact_info') == "1") ? true : false,
+                      'forbiddenBusiness' => ($this->getConfigData('forbidden_business') == "1") ? true : false
                     );
 
         foreach ($declarations as $key => $value) {
@@ -124,10 +117,6 @@ class Selfvalidation extends Action
                 $isValid = 0;             
          }
          
-         // echo 'status : '. $isValid."<br>";
-         // echo "<pre>";
-         // print_r($declared);
-         // echo "</pre>";
                 
          return array(
                 'status' => $isValid,
@@ -163,9 +152,7 @@ class Selfvalidation extends Action
     public function hasMandatoryImages() {
          $isValid = 1;
          $MandatoryImages = array(
-                  'visaLogoLink'    => $this->getConfigData('visa_logo_link'),
-                  'masterLogoLink'  => $this->getConfigData('master_logo_linkl'),
-                  'netopiaLogoLink' => $this->getConfigData('netopia_logo_link')
+                  'netopiaLogo' => $this->getConfigData('netopia_logo')
                 );
 
          foreach ($MandatoryImages as $key => $value) {
@@ -212,13 +199,20 @@ class Selfvalidation extends Action
     }
 
     public function hasSsl() {
-        $domain = "https://netopia-payments.com";
-        // $domain = 'https://'.$_SERVER['HTTP_HOST'];
+        $domain = 'https://'.$_SERVER['HTTP_HOST'];
         $stream = stream_context_create (array("ssl" => array("capture_peer_cert" => true)));
-        $read = fopen($domain, "rb", false, $stream);
-        $cont = stream_context_get_params($read);
-        $var = ($cont["options"]["ssl"]["peer_certificate"]);
-        $result = (!is_null($var)) ? true : false;
+        if( $read = @fopen($domain, "rb", false, $stream)){
+            $cont = stream_context_get_params($read);
+            if(isset($cont["options"]["ssl"]["peer_certificate"])){
+                $var = ($cont["options"]["ssl"]["peer_certificate"]);
+                $result = (!is_null($var)) ? true : false;
+            }else {
+                $result = false;
+            }            
+        } else {
+            $result = false;
+        }
+        
         return array(
                 'status' => $result,
             );

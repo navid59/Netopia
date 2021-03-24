@@ -58,9 +58,6 @@ class Jsonrequest extends Action
                       'forbiddenBusiness' =>  (bool) ($this->getConfigData('forbidden_business')) ? true : false
                     );
 
-        // echo "<pre>";
-        // print_r($ntpDeclare);
-        // echo "</pre><hr>";
 
         $ntpUrl = array(
                   'termsAndConditions' => $this->parsURL($this->getConfigData('terms_conditions_url')),
@@ -71,15 +68,11 @@ class Jsonrequest extends Action
                   );
 
         $ntpImg = array(
-                  // 'visaLogoLink' => $this->getConfigData('visa_logo_link'),
-                  // 'masterLogoLink' => $this->getConfigData('master_logo_linkl'),
-                  'netopiaLogoLink' => $this->parsURL($this->getConfigData('netopia_logo_link'))
+                  'netopiaLogo' => (bool) ($this->getConfigData('netopia_logo')) ? true : false
                 );
         
         $this->jsonData = $this->makeActivateJson($ntpDeclare, $ntpUrl, $ntpImg);
         
-        // echo "---- Jason Without Encrypt ----".PHP_EOL;
-        // print_r($this->jsonData);
 
         $this->encrypt();
         
@@ -88,23 +81,11 @@ class Jsonrequest extends Action
           'data'    => $this->getEncData()
           );
         
-        /*
-        * A sample of Encrypted data
-        */
-        // echo "---- array WITH Encrypt ----".PHP_EOL;
-        // echo "<pre>";
-        // print_r($this->encData);
-        // echo "</pre>";
         
         
-        $result = json_decode($this->sendJsonCurl()); // To do CURL as JASON
-        // $result = json_decode($this->sendJsonCurlArray()); // To do CURL as ARRAY
-        
+        $result = json_decode($this->sendJsonCurl()); //  CURL as Json
 
-        // echo "<pre>";
-        // print_r($result);
-        // echo "</pre>";
-
+        
         
         if($result->code == 200) {
           $response = array(
@@ -129,13 +110,20 @@ class Jsonrequest extends Action
     }
 
     public function has_ssl() {
-        $domain = "https://netopia-payments.com";
-        // $domain = $_SERVER['HTTP_HOST'];
+        $domain = 'https://'.$_SERVER['HTTP_HOST'];
         $stream = stream_context_create (array("ssl" => array("capture_peer_cert" => true)));
-        $read = fopen($domain, "rb", false, $stream);
-        $cont = stream_context_get_params($read);
-        $var = ($cont["options"]["ssl"]["peer_certificate"]);
-        $result = (!is_null($var)) ? true : false;
+        if( $read = @fopen($domain, "rb", false, $stream)){
+            $cont = stream_context_get_params($read);
+            if(isset($cont["options"]["ssl"]["peer_certificate"])){
+                $var = ($cont["options"]["ssl"]["peer_certificate"]);
+                $result = (!is_null($var)) ? true : false;
+            }else {
+                $result = false;
+            }            
+        } else {
+            $result = false;
+        }
+        
         return $result;
     }
 
@@ -146,12 +134,6 @@ class Jsonrequest extends Action
         return $certificateDir;
     }
 
-    // public function agreementExist(){
-    //   $agreemnetFile = $this->_getUploadDir().$this->getConfigData('auth/signature').'_agreements.xml';
-    //   if (file_exists($agreemnetFile)) {
-    //      unlink($agreemnetFile);
-    //   }
-    // }
 
     function makeActivateJson($declareatins, $urls, $images) {
       $jsonData = array(
@@ -190,7 +172,8 @@ class Jsonrequest extends Action
         $publicKeys = array($publicKey);
         $encData  = null;
         $envKeys  = null;
-        $result   = openssl_seal($srcData, $encData, $envKeys, $publicKeys);
+        $cipher_algo = 'RC4';
+        $result   = openssl_seal($srcData, $encData, $envKeys, $publicKeys, $cipher_algo);
         if($result === false)
           {
             $this->outEncData = null;
@@ -222,8 +205,6 @@ class Jsonrequest extends Action
 
         $payload = json_encode($this->encData);
 
-        // echo "---- Jason WITH Encrypt ----".PHP_EOL;
-        // print_r($payload);
 
         // Attach encoded JSON string to the POST fields
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
@@ -284,72 +265,72 @@ class Jsonrequest extends Action
         return $finalResult;
       }
 
-      public function sendJsonCurlArray() {
-        $fields_string = '';
-        $url = 'https://netopia-payments-user-service-api-fqvtst6pfa-ew.a.run.app/financial/agreement/add2';
+      // public function sendJsonCurlArray() {
+      //   $fields_string = '';
+      //   $url = 'https://netopia-payments-user-service-api-fqvtst6pfa-ew.a.run.app/financial/agreement/add2';
         
-        $ch = curl_init();
-        curl_setopt($ch,CURLOPT_URL, $url);
-        curl_setopt($ch,CURLOPT_POST, count($this->encData));
+      //   $ch = curl_init();
+      //   curl_setopt($ch,CURLOPT_URL, $url);
+      //   curl_setopt($ch,CURLOPT_POST, count($this->encData));
 
-        // Set the content type to multipart/form-data
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:multipart/form-data'));
+      //   // Set the content type to multipart/form-data
+      //   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:multipart/form-data'));
 
-        // Attach the array as a STRING  to the POST fields
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encData);
+      //   // Attach the array as a STRING  to the POST fields
+      //   curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encData);
 
-        // Return response instead of outputting
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      //   // Return response instead of outputting
+      //   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        // Execute the POST request
-        $result = curl_exec($ch);
+      //   // Execute the POST request
+      //   $result = curl_exec($ch);
 
-        if (!curl_errno($ch)) {
-              switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
-                  case 200:  # OK
-                      $arr = array(
-                          'code'    => $http_code,
-                          'message' => "You send your request, successfully",
-                          'data'    => json_decode($result)
-                      );
-                      break;
-                  case 404:  # Not Found
-                      $arr = array(
-                          'code'    => $http_code,
-                          'message' => "You send request to wrong URL"
-                      );
-                      break;
-                  case 400:  # Bad Request
-                      $arr = array(
-                          'code'    => $http_code,
-                          'message' => "You send Bad Request"
-                      );
-                      break;
-                  case 405:  # Method Not Allowed
-                      $arr = array(
-                          'code'    => $http_code,
-                          'message' => "Your method of sending data are Not Allowed"
-                      );
-                      break;
-                  default:
-                      $arr = array(
-                          'code'    => $http_code,
-                          'message' => "Opps! Something happened, verify how you send data & try again!!!->".$http_code
-                      );
-              }
-          } else {
-              $arr = array(
-                  'code'    => 0,
-                  'message' => "Opps! There is some problem, you are not able to send data!!!"
-              );
-          }
+      //   if (!curl_errno($ch)) {
+      //         switch ($http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
+      //             case 200:  # OK
+      //                 $arr = array(
+      //                     'code'    => $http_code,
+      //                     'message' => "You send your request, successfully",
+      //                     'data'    => json_decode($result)
+      //                 );
+      //                 break;
+      //             case 404:  # Not Found
+      //                 $arr = array(
+      //                     'code'    => $http_code,
+      //                     'message' => "You send request to wrong URL"
+      //                 );
+      //                 break;
+      //             case 400:  # Bad Request
+      //                 $arr = array(
+      //                     'code'    => $http_code,
+      //                     'message' => "You send Bad Request"
+      //                 );
+      //                 break;
+      //             case 405:  # Method Not Allowed
+      //                 $arr = array(
+      //                     'code'    => $http_code,
+      //                     'message' => "Your method of sending data are Not Allowed"
+      //                 );
+      //                 break;
+      //             default:
+      //                 $arr = array(
+      //                     'code'    => $http_code,
+      //                     'message' => "Opps! Something happened, verify how you send data & try again!!!->".$http_code
+      //                 );
+      //         }
+      //     } else {
+      //         $arr = array(
+      //             'code'    => 0,
+      //             'message' => "Opps! There is some problem, you are not able to send data!!!"
+      //         );
+      //     }
         
-        // Close cURL resource
-        curl_close($ch);
+      //   // Close cURL resource
+      //   curl_close($ch);
         
-        $finalResult = json_encode($arr, JSON_FORCE_OBJECT);
-        return $finalResult;
-      }
+      //   $finalResult = json_encode($arr, JSON_FORCE_OBJECT);
+      //   return $finalResult;
+      // }
 
       public function parsURL($pageUrl) {
         $hostName = parse_url($pageUrl, PHP_URL_HOST);
