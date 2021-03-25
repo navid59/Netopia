@@ -133,6 +133,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
         $errorMessage = '';
         $this->_initData($objPmReq);
 
+        $this->setLog($objPmReq->objPmNotify->action);
         switch ($objPmReq->objPmNotify->action) {
             case 'confirmed':
                 if ($objPmReq->objPmNotify->errorCode == 0) {
@@ -223,7 +224,7 @@ class Ipn extends Action implements CsrfAwareActionInterface {
             //build method creates the transaction and returns the object
             ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_REFUND);
         $payment->addTransactionCommentsToOrder($transaction, $this->_objPmReq->objPmNotify->errorMessage. " - payment rejected by NETOPIA Payments - ");
-        $this->_order->setStatus(Order::STATE_PENDING_PAYMENT); // Order status Can be even set as STATE_CANCELED
+        $this->_order->setStatus(Order::STATE_CANCELED);
         $this->_order->save();
     }
 
