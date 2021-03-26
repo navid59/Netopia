@@ -186,11 +186,11 @@
 
                     </group>                    
 
-                    <field id="checkup" translate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <!-- <field id="checkup" translate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Self Validation</label>
                         <frontend_model>Netopia\Netcard\Block\System\Config\SelfValidation</frontend_model>
                         <comment>Save your configurations and then do self validation</comment>
-                    </field>
+                    </field> -->
                     <field id="golive" translate="label" type="button" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Ask NETOPIA Payments to verify the application</label>
                         <frontend_model>Netopia\Netcard\Block\System\Config\SendToVerify</frontend_model>
@@ -200,7 +200,7 @@
                 </group>    
                 <group id="country" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Countries / Currencies available</label>
-                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="10" showInDefault="9"
+                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="10" showInDefault="1"
                            showInWebsite="1" showInStore="0">
                         <label>Payment From Applicable Countries</label>
                         <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>

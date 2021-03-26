@@ -4,7 +4,6 @@ require([
     'prototype',
 ], function(jQuery){
     function self_validation() {
-        console.log('self Validation - Start');
         params = {
         };
 
@@ -24,9 +23,7 @@ require([
                     jQuery('#selfvalidation_message').text(resultText);
             }
         });
-        console.log(response);
-        console.log('----------------------------------------');
-        console.log('self Validation - End');
+        // console.log(response);
     }
 
     jQuery('#selfvalidation_button').click(function () {
