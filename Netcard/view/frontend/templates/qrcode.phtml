@@ -2,7 +2,7 @@
     /* @var Netopia\Netcard\Block\Qrcode $block */
     $quote = $block->getQuote();
     $qrcodeDta = $block->getQrcodeData();
-    $platform = $block->getConfigData('mode/is_live') ? 3 : 4;
+    $platform = $block->getConfigData('api/is_live') ? 3 : 4;
     
     if($qrcodeDta->errors->code === "0") {
        ?>

@@ -28,6 +28,10 @@
                         <config_path>payment/net_card/active</config_path>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
+                    <field id="is_live" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Live Mode</label>
+                        <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    </field>
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
                         <config_path>payment/net_card/title</config_path>
@@ -63,11 +67,7 @@
                     </field>
                 </group>
                 <group id="mode" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
-                    <label>Mode Configuration</label>
-                    <field id="is_live" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Live Mode</label>
-                        <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
-                    </field>
+                    <label>Certificate Configuration</label>
                     <field id="live_public_key" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="20" showInDefault="1" showInWebsite="1" >
                         <label>Live public key</label>
                         <backend_model>Netopia\Netcard\Model\Config\Backend\CustomFileType</backend_model>

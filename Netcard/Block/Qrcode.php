@@ -130,7 +130,7 @@ class Qrcode extends Template
                         'confirm_url' => $this->getUrl('netopia/payment/ipn'),
                         'hash' => '',
                         ],
-                    'platform' => $this->getConfigData('mode/is_live') ? 3 : 4,
+                    'platform' => $this->getConfigData('api/is_live') ? 3 : 4,
                     'order' => [
                         'amount' => $order->getBaseGrandTotal(),
                         'id' => $order->getId(),
