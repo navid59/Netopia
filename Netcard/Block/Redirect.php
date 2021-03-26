@@ -125,7 +125,7 @@ class Redirect extends Template
 
         try {
             $objPmReqCard = new MobilpayPaymentRequestCard();
-            $objPmReqCard->signature = $this->getConfigData('auth/signature');
+            $objPmReqCard->signature = $this->getConfigData('api/signature');
 
             // Get Public Key filename
             $mode = $this->getConfigData('api/is_live') ? "live." : "sandbox.";

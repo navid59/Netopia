@@ -68,14 +68,13 @@
             <?php
         }
     } else {
+        $msg = (isset($qrcodeDta->errors->message) && !is_null($qrcodeDta->errors->message)) ? $qrcodeDta->errors->message : ""; 
         echo '<div class="">
                     <img src="https://suport.mobilpay.ro/np-logo-blue.svg" width="134" alt="Netopia Payment>"/>
                     <h1 class="">
                         <span class="" >OOPS, something is wrong!!</span>
                     </h1>
+                    <p>'.$msg.'</p>
               </div>';
     }
-
-
-
 ?>

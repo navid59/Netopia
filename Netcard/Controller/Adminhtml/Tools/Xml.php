@@ -102,7 +102,7 @@
 //     $xmlRoot = $domtree->createElement("xml");
 //     $xmlRoot = $domtree->appendChild($xmlRoot);
 
-//     $sac_key = $domtree->createElement("sac_key", $this->getConfigData('auth/signature'));
+//     $sac_key = $domtree->createElement("sac_key", $this->getConfigData('api/signature'));
 //     $xmlRoot->appendChild($sac_key);
     
 //     $agr = $domtree->createElement("agrremnts");
@@ -139,7 +139,7 @@
 //     $last_update = $xmlRoot->appendChild($last_update);
 
 //     $this->agreementExist();
-//     $result = $domtree->save($this->_getUploadDir().$this->getConfigData('auth/signature').'_agreements.xml') ? true : false;
+//     $result = $domtree->save($this->_getUploadDir().$this->getConfigData('api/signature').'_agreements.xml') ? true : false;
 //     return $result;
 //     }
 
@@ -150,7 +150,7 @@
 //     }
 
 //     public function agreementExist(){
-//       $agreemnetFile = $this->_getUploadDir().$this->getConfigData('auth/signature').'_agreements.xml';
+//       $agreemnetFile = $this->_getUploadDir().$this->getConfigData('api/signature').'_agreements.xml';
 //       if (file_exists($agreemnetFile)) {
 //          unlink($agreemnetFile);
 //       }
@@ -158,7 +158,7 @@
 
 //     function makeActivateJson($declareatins, $urls, $images) {
 //       $jsonData = array(
-//         "sac_key" => $this->getConfigData('auth/signature'),
+//         "sac_key" => $this->getConfigData('api/signature'),
 //         "agrremnts" => array(
 //               "declare" => $declareatins,
 //               "urls"    => $urls,

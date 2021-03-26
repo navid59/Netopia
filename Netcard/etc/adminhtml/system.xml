@@ -15,14 +15,8 @@
                 <fieldset_css>complex netcard-section</fieldset_css>
                 <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
 
-                <group id="auth" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
-                    <label>Basic Configuration</label>
-                    <field id="signature" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Merchant Id / Signature</label>
-                    </field>
-                </group>
                 <group id="api" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
-                    <label>Advanced configuration </label>
+                    <label>Base configuration </label>
                     <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Enabled</label>
                         <config_path>payment/net_card/active</config_path>
@@ -31,6 +25,9 @@
                     <field id="is_live" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Live Mode</label>
                         <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    </field>
+                    <field id="signature" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Merchant Id / Signature</label>
                     </field>
                     <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Title</label>
@@ -43,18 +40,6 @@
                     <!-- <field id="payment_action" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Payment Action</label>
                         <source_model>Netopia\Netcard\Model\Adminhtml\Source\PaymentAction</source_model>
-                    </field> -->
-                    <field id="card_payment" translate="label" type="select" sortOrder="40" showInDefault="0" showInWebsite="1" showInStore="0">
-                        <label>Allow Card Payment</label>
-                        <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
-                    </field>
-                    <field id="qr_payment" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
-                        <label>Allow mobilPay WALLET Payment</label>
-                        <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
-                    </field>
-                    <field id="crypto_payment" translate="label" type="select"  sortOrder="50" showInDefault="0" showInWebsite="1" showInStore="0">
-                        <label>Allow Crypto Payment</label>
-                        <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                     </field>
                     <field id="debug" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Debug</label>
@@ -64,7 +49,7 @@
                            showInStore="0">
                         <label>Sort Order</label>
                         <frontend_class>validate-number</frontend_class>
-                    </field>
+                    </field> -->
                 </group>
                 <group id="mode" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
                     <label>Certificate Configuration</label>
@@ -86,6 +71,19 @@
                     <field id="sandbox_private_key" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="50" showInDefault="1" showInWebsite="1" >
                         <label>Sandbox private key</label>
                         <backend_model>Netopia\Netcard\Model\Config\Backend\CustomFileType</backend_model>
+                    </field>
+                </group>
+                <group id="auth" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+                    <label>mobilPay WALLET Configuration</label>
+                    <field id="qr_payment" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Allow mobilPay WALLET Payment</label>
+                        <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    </field>
+                    <field id="username" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Username</label>
+                    </field>
+                    <field id="password" translate="label" type="password" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Password</label>
                     </field>
                 </group>
                 <group id="conditions" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">

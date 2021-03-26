@@ -399,14 +399,14 @@ class Ipn extends Action implements CsrfAwareActionInterface {
                     if(!is_null($sandboxPrivateKey) && file_exists($path.$sandboxPrivateKey)){
                         $privateKeyFilePath = $path . $sandboxPrivateKey;
                     }else{
-                        $privateKeyFilePath = $path . "sandbox.".$this->getConfigData('auth/signature')."private.key";
+                        $privateKeyFilePath = $path . "sandbox.".$this->getConfigData('api/signature')."private.key";
                     }
                 }else {
                     $livePrivateKey = $this->getConfigData('mode/live_private_key');
                     if(!is_null($livePrivateKey) && file_exists($path.$livePrivateKey)) {
                         $privateKeyFilePath = $path . $livePrivateKey;
                     }else {
-                        $privateKeyFilePath = $path . "live.".$this->getConfigData('auth/signature')."private.key";
+                        $privateKeyFilePath = $path . "live.".$this->getConfigData('api/signature')."private.key";
                     }
                 }
 

@@ -49,7 +49,7 @@ class CaptureRequestTest extends \PHPUnit_Framework_TestCase
 
         $configMock->expects(static::once())
             ->method('getValue')
-            ->with('auth/signature', $storeId)
+            ->with('api/signature', $storeId)
             ->willReturn($merchantToken);
 
         /** @var ConfigInterface $configMock */

@@ -137,7 +137,7 @@ class Jsonrequest extends Action
 
     function makeActivateJson($declareatins, $urls, $images) {
       $jsonData = array(
-        "sac_key" => $this->getConfigData('auth/signature'),
+        "sac_key" => $this->getConfigData('api/signature'),
         "agreements" => array(
               "declare" => $declareatins,
               "urls"    => $urls,
@@ -248,7 +248,7 @@ class Jsonrequest extends Action
                   default:
                       $arr = array(
                           'code'    => $http_code,
-                          'message' => "Opps! Something happened, verify how you send data & try again!!!->".$http_code
+                          'message' => "Opps! Something is wrong, verify how you send data & try again!!!"
                       );
               }
           } else {

@@ -125,7 +125,7 @@ class Qrcode extends Template
         $data =
                 [
                     'account' => [
-                        'id' => $this->getConfigData('auth/signature'),
+                        'id' => $this->getConfigData('api/signature'),
                         'user_name' => $this->getConfigData('auth/username'),
                         'confirm_url' => $this->getUrl('netopia/payment/ipn'),
                         'hash' => '',
@@ -175,7 +175,12 @@ class Qrcode extends Template
             $params->request = $request;
             $response = $client->doPay($params);
         } catch (\Exception $exception) {
-           $response = $exception->error_reporting();
+            $errorResponse = new \StdClass;
+            $errorResponse->errors = new \StdClass;
+            $errorResponse->errors->code = 1;
+            $errorResponse->errors->message = "Verify, the Wallet setting";
+            return($errorResponse); 
+            // $response = $exception->error_reporting();
         }
         return($response->doPayResult);
     }
