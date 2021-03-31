@@ -61,6 +61,13 @@ class Guest extends Action
             return $this->resultRedirectFactory->create()->setPath('checkout/cart');
         }
 
+        if(!$order->getCustomerIsGuest()){
+            $msg = 'You already have account. To get any information, first loggin to your account';
+            $this->messageManager->addError($msg);
+            return $this->resultRedirectFactory->create()->setPath('checkout/cart');
+        }
+
+
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $customerSession = $objectManager->get('Magento\Customer\Model\Session');
         if($customerSession->isLoggedIn()) {

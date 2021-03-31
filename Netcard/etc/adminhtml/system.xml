@@ -51,7 +51,7 @@
                         <frontend_class>validate-number</frontend_class>
                     </field> -->
                 </group>
-                <group id="mode" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+                <group id="mode" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
                     <label>Certificate Configuration</label>
                     <field id="live_public_key" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="20" showInDefault="1" showInWebsite="1" >
                         <label>Live public key</label>
@@ -73,6 +73,23 @@
                         <backend_model>Netopia\Netcard\Model\Config\Backend\CustomFileType</backend_model>
                     </field>
                 </group>
+
+                <group id="custom" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
+                    <label>Custom configuration</label>
+                    <field id="custom_payment_complit" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Set status on payment completed</label>
+                            <source_model>Netopia\Netcard\Model\Config\Backend\PaymentComplit</source_model>
+                    </field>
+                    <field id="custom_payment_fraud" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Set status on payment review (Fraud)</label>
+                            <source_model>Netopia\Netcard\Model\Config\Backend\PaymentFraud</source_model>
+                    </field>
+                    <field id="custom_payment_cancel" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Set status on cancel payment</label>
+                            <source_model>Netopia\Netcard\Model\Config\Backend\PaymentCancel</source_model>
+                    </field>
+                </group>
+
                 <group id="auth" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0" translate="label">
                     <label>mobilPay WALLET Configuration</label>
                     <field id="qr_payment" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
