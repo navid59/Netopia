@@ -1,1 +1,4 @@
-Netcard/etc/certificates/
+Netcard/etc/certificates/*
+
+# exception to the rule
+!Netcard/etc/certificates/index.php
